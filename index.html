@@ -215,7 +215,8 @@
     .stat-num {
       font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700;
       background: linear-gradient(135deg, var(--saffron), var(--gold));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
 
@@ -302,8 +303,6 @@
     .audio-title { font-weight: 600; font-size: 0.95rem; color: var(--dark); }
     .audio-sub   { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
     .audio-card audio { width: 100%; border-radius: 50px; accent-color: var(--saffron); }
-
-    /* Audio fallback open-in-drive button */
     .audio-fallback {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 0.8rem; color: var(--saffron);
@@ -358,31 +357,6 @@
       font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
     }
 
-    /* ── CONTRIBUTE ── */
-    #contribute { background: #fff; }
-    .contribute-card {
-      max-width: 640px; margin: 0 auto; padding: 2.5rem;
-      text-align: center; border-radius: var(--radius);
-      background: linear-gradient(135deg, #fff8ee, #ffe8c2);
-      border: 1px solid rgba(212,175,55,0.3); box-shadow: var(--shadow);
-    }
-    .contribute-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem; color: var(--dark); margin-bottom: 0.6rem;
-    }
-    .contribute-card p { color: var(--text-muted); margin-bottom: 1.8rem; line-height: 1.65; }
-    .how-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 1rem; margin-top: 0.5rem;
-    }
-    .how-item {
-      padding: 1rem; background: white; border-radius: 12px;
-      border: 1px solid rgba(212,175,55,0.2); text-align: center;
-    }
-    .how-item .how-icon { font-size: 1.8rem; }
-    .how-item p { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; margin-bottom: 0; }
-
     /* ── FOOTER ── */
     footer {
       background: var(--dark); color: rgba(255,255,255,0.6);
@@ -420,7 +394,6 @@
     <li><a href="#audio">Audio</a></li>
     <li><a href="#videos">Videos</a></li>
     <li><a href="#quotes">Quotes</a></li>
-    <li><a href="#contribute">Contribute</a></li>
   </ul>
   <button class="hamburger" id="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -550,30 +523,6 @@
   </div>
 </section>
 
-<!-- ══════════ CONTRIBUTE ══════════ -->
-<section id="contribute">
-  <div class="reveal">
-    <span class="section-label">📂 Share Blessings</span>
-    <h2 class="section-title">Add Your Media</h2>
-    <div class="gold-divider"></div>
-  </div>
-  <div class="contribute-card reveal">
-    <div style="font-size:2.5rem;margin-bottom:0.6rem;">🙏</div>
-    <h3>How to Contribute</h3>
-    <p>
-      Simply drop files into the correct folder on our shared Google Drive —
-      they appear here <strong>automatically!</strong>
-      For YouTube videos, add links to <code>youtube-links.txt</code>.
-    </p>
-    <div class="how-grid">
-      <div class="how-item"><div class="how-icon">📸</div><p>Photos<br/><strong>Photos/</strong></p></div>
-      <div class="how-item"><div class="how-icon">🎵</div><p>Audio<br/><strong>Audio/</strong></p></div>
-      <div class="how-item"><div class="how-icon">🎬</div><p>Videos<br/><strong>Videos/</strong></p></div>
-      <div class="how-item"><div class="how-icon">▶️</div><p>YouTube<br/><strong>youtube-links.txt</strong></p></div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ FOOTER ══════════ -->
 <footer>
   <p>🕉️ Made with 🧡 and devotion for <span>Guruji</span></p>
@@ -582,45 +531,33 @@
   </p>
 </footer>
 
-<!-- ══════════════════════════════════════════
-     J A V A S C R I P T
-═══════════════════════════════════════════ -->
 <script>
 
   // ╔═══════════════════════════════════╗
   // ║  🔧 CONFIGURATION — EDIT THESE   ║
   // ╚═══════════════════════════════════╝
-  const API_KEY     = 'AIzaSyDegKB0By3JhcppdsM1Ur8YJ644HVArImA';                 // ← Your API key here
-  const ROOT_FOLDER = '1ZwZNt8Aa_XqnJw1_U8_ST0afcD59fBcY';  // ← Already set!
+  const API_KEY     = 'AIzaSyDegKB0By3JhcppdsM1Ur8YJ644HVArImA';
+  const ROOT_FOLDER = '1ZwZNt8Aa_XqnJw1_U8_ST0afcD59fBcY';
 
   const FOLDER_NAMES = {
-    photos : 'Photos',   // ← e.g. if your folder is literally called "Photos"
-    audio  : 'Audio',    // ← e.g. "Audio Files" → put 'Audio Files'
-    videos : 'Videos'    // ← exact name matters!
-};
+    photos : 'Photos',
+    audio  : 'Audio',
+    videos : 'Videos'
+  };
   const YOUTUBE_FILE_NAME = 'youtube-links.txt';
 
   // ─────────────────────────────────────
-  //  URL BUILDERS  ← THE KEY FIXES
+  //  URL BUILDERS
   // ─────────────────────────────────────
-
-  // ✅ FIX 1: Images — use /thumbnail instead of deprecated /uc?export=view
-  // sz=w1200 gives high-res; for lightbox we use w2000
   function imageUrl(fileId, size = 'w1200') {
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=${size}`;
   }
-
-  // ✅ FIX 2: Audio — use /uc?export=download (streaming-friendly)
   function audioUrl(fileId) {
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
-
-  // ✅ FIX 3: Drive video — /preview embed (unchanged, already correct)
   function driveVideoUrl(fileId) {
     return `https://drive.google.com/file/d/${fileId}/preview`;
   }
-
-  // ✅ FIX 4: YouTube embed
   function youtubeEmbedUrl(videoId) {
     return `https://www.youtube.com/embed/${videoId}?rel=0`;
   }
@@ -639,7 +576,6 @@
       url.searchParams.set('pageSize', '100');
       url.searchParams.set('orderBy',  'name');
       if (pageToken) url.searchParams.set('pageToken', pageToken);
-
       const res  = await fetch(url.toString());
       const data = await res.json();
       if (data.error) throw new Error(data.error.message);
@@ -650,68 +586,60 @@
   }
 
   async function findSubfolder(parentId, name) {
-    // ✅ Escape single quotes in name for Drive API query safety
     const safeName = name.replace(/'/g, "\\'");
-
     const url = new URL('https://www.googleapis.com/drive/v3/files');
     url.searchParams.set('q',
       `'${parentId}' in parents and name = '${safeName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
     );
     url.searchParams.set('key',    API_KEY);
     url.searchParams.set('fields', 'files(id, name)');
-
     const res  = await fetch(url.toString());
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     return data.files?.[0] || null;
-}
+  }
 
   // ─────────────────────────────────────
   //  YOUTUBE LINKS PARSER
-  //  ✅ FIX: fetch with &alt=media via API
   // ─────────────────────────────────────
   async function fetchYouTubeLinks(rootItems) {
     const txtFile = rootItems.find(f => f.name === YOUTUBE_FILE_NAME);
     if (!txtFile) {
-      console.warn('youtube-links.txt not found in root folder.');
+      console.warn('⚠️ youtube-links.txt not found in root folder.');
+      console.log('📄 Files found in root:', rootItems.map(f => f.name));
       return [];
     }
-
-    // Correct way to read a plain text file via Drive API
+    console.log('✅ youtube-links.txt found! ID:', txtFile.id);
     const url = `https://www.googleapis.com/drive/v3/files/${txtFile.id}?alt=media&key=${API_KEY}`;
     let text = '';
     try {
       const res = await fetch(url);
       if (!res.ok) {
-        console.warn('Could not read youtube-links.txt — status:', res.status);
+        console.warn('❌ Could not read youtube-links.txt — status:', res.status);
         return [];
       }
       text = await res.text();
+      console.log('📄 youtube-links.txt contents:\n', text);
     } catch (e) {
-      console.warn('youtube-links.txt fetch failed:', e);
+      console.warn('❌ youtube-links.txt fetch failed:', e);
       return [];
     }
-
     const lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
     const results = [];
-
     for (const line of lines) {
-      let title  = '';
-      let rawUrl = line;
-
-      // Support: "My Title | https://youtube.com/..."
+      let title = '', rawUrl = line;
       if (line.includes('|')) {
         const [t, u] = line.split('|');
-        title  = t.trim();
-        rawUrl = u.trim();
+        title = t.trim(); rawUrl = u.trim();
       }
-
       const videoId = extractYouTubeId(rawUrl);
       if (videoId) {
         results.push({ id: videoId, title: title || 'Guruji — YouTube Video', type: 'youtube' });
+      } else {
+        console.warn('⚠️ Could not extract YouTube ID from:', rawUrl);
       }
     }
-
+    console.log('▶️ YouTube videos parsed:', results);
     return results;
   }
 
@@ -741,33 +669,25 @@
   function buildGallery(images) {
     const grid = document.getElementById('galleryGrid');
     grid.innerHTML = '';
-
     if (!images.length) {
-      grid.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">🖼️</div>
-        <p>No photos yet — add images to the <strong>Photos/</strong> folder in Drive!</p>
-      </div>`;
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🖼️</div>
+        <p>No photos yet — add images to the <strong>Photos/</strong> folder in Drive!</p></div>`;
       return;
     }
-
-    // Use first photo as portrait in About section
     document.getElementById('aboutImage').innerHTML =
       `<img src="${imageUrl(images[0].id, 'w800')}" alt="Guruji"
             onerror="this.parentElement.innerHTML='<span>🕉️</span>'"/>`;
-
     images.forEach((file, i) => {
       const thumb   = imageUrl(file.id, 'w600');
       const fullRes = imageUrl(file.id, 'w2000');
       const name    = cleanName(file.name);
-
-      const card = document.createElement('div');
+      const card    = document.createElement('div');
       card.className = 'card gallery-card reveal';
       card.style.transitionDelay = `${i * 40}ms`;
       card.innerHTML = `
         <img src="${thumb}" alt="${name}" loading="lazy"
              onerror="this.parentElement.style.display='none'"/>
-        <div class="gallery-overlay">${name}</div>
-      `;
+        <div class="gallery-overlay">${name}</div>`;
       card.addEventListener('click', () => openLightbox(fullRes, name));
       grid.appendChild(card);
       requestAnimationFrame(() => revealObserver.observe(card));
@@ -775,65 +695,44 @@
   }
 
   // ─────────────────────────────────────
-  //  BUILD: AUDIO
+  //  BUILD: AUDIO ✅ Original preview player
   // ─────────────────────────────────────
   function buildAudio(audios) {
     const grid = document.getElementById('audioGrid');
     grid.innerHTML = '';
-
     if (!audios.length) {
-      grid.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">🎵</div>
-        <p>No audio yet — add MP3 files to the <strong>Audio/</strong> folder in Drive!</p>
-      </div>`;
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🎵</div>
+        <p>No audio yet — add MP3 files to the <strong>Audio/</strong> folder in Drive!</p></div>`;
       return;
     }
-
     const icons = ['🎵','🙏','🪔','🕉️','🪷','✨','🌸','🔔'];
-
     audios.forEach((file, i) => {
-      // ✅ Using export=download for audio streaming
-      const src = `https://drive.google.com/file/d/${file.id}/preview`;
+      const src  = `https://drive.google.com/file/d/${file.id}/preview`;
       const name = cleanName(file.name);
       const date = formatDate(file.createdTime);
       const icon = icons[i % icons.length];
-      // Fallback: open in Drive if browser blocks inline playback
-      const driveLink = `https://drive.google.com/file/d/${file.id}/view`;
-
       const card = document.createElement('div');
       card.className = 'card audio-card reveal';
       card.style.transitionDelay = `${i * 40}ms`;
       card.innerHTML = `
         <div class="audio-info">
-            <div class="audio-icon">${icon}</div>
-            <div>
+          <div class="audio-icon">${icon}</div>
+          <div>
             <div class="audio-title">${name}</div>
             <div class="audio-sub">${date || 'Satsang'}</div>
-            </div>
+          </div>
         </div>
-
-        <!-- ✅ Drive preview iframe — works perfectly for audio -->
         <iframe
-            src="${src}"
-            width="100%"
-            height="80"
-            allow="autoplay"
-            style="border:none; border-radius:12px; margin-top:4px;"
-            loading="lazy">
-        </iframe>
-        `;
-
+          src="${src}"
+          width="100%"
+          height="80"
+          allow="autoplay"
+          style="border:none; border-radius:12px; margin-top:4px;"
+          loading="lazy">
+        </iframe>`;
       grid.appendChild(card);
       requestAnimationFrame(() => revealObserver.observe(card));
     });
-  }
-
-  // If audio errors on play, show the fallback Drive link
-  function handleAudioPlay(audioEl) {
-    audioEl.addEventListener('error', () => {
-      const fallback = audioEl.nextElementSibling;
-      if (fallback) fallback.style.display = 'flex';
-    }, { once: true });
   }
 
   // ─────────────────────────────────────
@@ -842,16 +741,12 @@
   function buildVideos(driveVideos, youtubeVideos) {
     const grid = document.getElementById('videoGrid');
     grid.innerHTML = '';
-
     const total = driveVideos.length + youtubeVideos.length;
     if (!total) {
-      grid.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">🎬</div>
-        <p>No videos yet — add MP4s to <strong>Videos/</strong> or links to <strong>youtube-links.txt</strong>!</p>
-      </div>`;
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🎬</div>
+        <p>No videos yet — add links to <strong>youtube-links.txt</strong> or MP4s to <strong>Videos/</strong>!</p></div>`;
       return;
     }
-
     // YouTube first
     youtubeVideos.forEach((vid, i) => {
       const card = document.createElement('div');
@@ -867,12 +762,10 @@
         <div class="video-info">
           <div class="video-title">${vid.title}</div>
           <div class="video-meta">▶️ YouTube</div>
-        </div>
-      `;
+        </div>`;
       grid.appendChild(card);
       requestAnimationFrame(() => revealObserver.observe(card));
     });
-
     // Drive MP4s
     driveVideos.forEach((file, i) => {
       const name = cleanName(file.name);
@@ -889,8 +782,7 @@
         <div class="video-info">
           <div class="video-title">${name}</div>
           <div class="video-meta">🎬 Video${date ? ' · ' + date : ''}</div>
-        </div>
-      `;
+        </div>`;
       grid.appendChild(card);
       requestAnimationFrame(() => revealObserver.observe(card));
     });
@@ -920,37 +812,28 @@
   // ─────────────────────────────────────
   async function init() {
     try {
-      // 1. Root folder contents (subfolders + youtube-links.txt)
       const rootItems = await fetchFolderContents(ROOT_FOLDER);
-
-      // 2. Find subfolders in parallel
+      console.log('📂 Root folder items:', rootItems.map(f => f.name));
       const [photosFolder, audioFolder, videosFolder] = await Promise.all([
         findSubfolder(ROOT_FOLDER, FOLDER_NAMES.photos),
         findSubfolder(ROOT_FOLDER, FOLDER_NAMES.audio),
         findSubfolder(ROOT_FOLDER, FOLDER_NAMES.videos)
       ]);
-
-      // 3. Fetch each folder's contents + YouTube links in parallel
       const [photos, audios, driveVideos, youtubeVideos] = await Promise.all([
         photosFolder ? fetchFolderContents(photosFolder.id) : Promise.resolve([]),
         audioFolder  ? fetchFolderContents(audioFolder.id)  : Promise.resolve([]),
         videosFolder ? fetchFolderContents(videosFolder.id) : Promise.resolve([]),
         fetchYouTubeLinks(rootItems)
       ]);
-
-      // 4. Render
       buildGallery(photos);
       buildAudio(audios);
       buildVideos(driveVideos, youtubeVideos);
-
-      // 5. Stats
       const totalVids = driveVideos.length + youtubeVideos.length;
       document.getElementById('photoCount').textContent = photos.length || '0';
       document.getElementById('audioCount').textContent = audios.length || '0';
       document.getElementById('videoCount').textContent = totalVids    || '0';
-
     } catch (err) {
-      console.error('Init error:', err);
+      console.error('❌ Init error:', err);
       showError(err.message || 'Something went wrong. Please try again.');
     }
   }
@@ -966,7 +849,6 @@
       }
     });
   }, { threshold: 0.08 });
-
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
   // ─────────────────────────────────────
@@ -998,7 +880,6 @@
     a.addEventListener('click', () => navLinks.classList.remove('open'))
   );
 
-  // GO!
   init();
 
 </script>
