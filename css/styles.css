@@ -394,4 +394,91 @@
       .about-img-wrap { aspect-ratio: 4/3; }
     }
 
+/* ── FACEBOOK VIDEO CARD ── */
+.fb-video-thumb {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1877f2 0%, #0d4fa8 50%, #003580 100%);
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Animated shimmer background */
+.fb-video-thumb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: fbShimmer 2.5s infinite;
+}
+@keyframes fbShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Facebook "F" watermark */
+.fb-video-thumb::after {
+  content: 'f';
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.15);
+  font-family: 'Georgia', serif;
+  line-height: 1;
+}
+
+/* Play button */
+.fb-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.fb-play-btn svg { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); }
+.fb-play-bg  { fill: #1877f2; }
+.fb-play-arrow { fill: white; }
+
+/* Hover overlay */
+.fb-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1.2rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.fb-open-label {
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(24,119,242,0.9);
+  padding: 6px 16px;
+  border-radius: 50px;
+}
+
+/* Hover effects */
+.fb-video-thumb:hover .fb-play-btn {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+.fb-video-thumb:hover .fb-video-overlay {
+  opacity: 1;
+}
+
+
   </style>
