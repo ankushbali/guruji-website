@@ -314,17 +314,37 @@
     .audio-fallback:hover { background: var(--saffron); color: white; }
 
     /* ── VIDEOS ── */
-    #videos { background: var(--cream); }
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.4rem;
-    }
-    .video-card { overflow: hidden; }
-    .video-embed { width: 100%; aspect-ratio: 16/9; border: none; display: block; background: #000; }
-    .video-info { padding: 1.1rem 1.2rem; }
-    .video-title { font-weight: 600; font-size: 0.95rem; color: var(--dark); }
-    .video-meta  { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+/* ── VIDEOS ── */
+#videos { background: var(--cream); }
+#videoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+.video-section-header { margin-bottom: 0.5rem; }
+.video-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+}
+.video-section-divider {
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--saffron), var(--gold), transparent);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+.video-grid-inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.4rem;
+}
+.video-card { overflow: hidden; }
+.video-embed { width: 100%; aspect-ratio: 16/9; border: none; display: block; background: #000; }
+.video-info { padding: 1.1rem 1.2rem; }
+.video-title { font-weight: 600; font-size: 0.95rem; color: var(--dark); }
+.video-meta  { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
 
     /* ── QUOTES ── */
     #quotes { background: linear-gradient(135deg, #1A0A00, #3D1C00); color: white; }
@@ -604,53 +624,95 @@
   // ─────────────────────────────────────
   //  YOUTUBE LINKS PARSER
   // ─────────────────────────────────────
-  async function fetchYouTubeLinks(rootItems) {
-    const txtFile = rootItems.find(f => f.name === YOUTUBE_FILE_NAME);
-    if (!txtFile) {
-      console.warn('⚠️ youtube-links.txt not found in root folder.');
-      console.log('📄 Files found in root:', rootItems.map(f => f.name));
-      return [];
-    }
-    console.log('✅ youtube-links.txt found! ID:', txtFile.id);
-    const url = `https://www.googleapis.com/drive/v3/files/${txtFile.id}?alt=media&key=${API_KEY}`;
-    let text = '';
-    try {
-      const res = await fetch(url);
-      if (!res.ok) {
-        console.warn('❌ Could not read youtube-links.txt — status:', res.status);
-        return [];
-      }
-      text = await res.text();
-      console.log('📄 youtube-links.txt contents:\n', text);
-    } catch (e) {
-      console.warn('❌ youtube-links.txt fetch failed:', e);
-      return [];
-    }
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
-    const results = [];
-    for (const line of lines) {
-      let title = '', rawUrl = line;
-      if (line.includes('|')) {
-        const [t, u] = line.split('|');
-        title = t.trim(); rawUrl = u.trim();
-      }
-      const videoId = extractYouTubeId(rawUrl);
-      if (videoId) {
-        results.push({ id: videoId, title: title || 'Guruji — YouTube Video', type: 'youtube' });
-      } else {
-        console.warn('⚠️ Could not extract YouTube ID from:', rawUrl);
-      }
-    }
-    console.log('▶️ YouTube videos parsed:', results);
-    return results;
+// ─────────────────────────────────────
+//  VIDEO LINKS PARSER
+//  Supports: YouTube, Facebook, Instagram
+//  Supports: Dynamic [Section] headers
+// ─────────────────────────────────────
+async function fetchVideoLinks(rootItems) {
+  const txtFile = rootItems.find(f => f.name === YOUTUBE_FILE_NAME);
+  if (!txtFile) {
+    console.warn('⚠️ youtube-links.txt not found in root folder.');
+    return {};
+  }
+  const url = `https://www.googleapis.com/drive/v3/files/${txtFile.id}?alt=media&key=${API_KEY}`;
+  let text = '';
+  try {
+    const res = await fetch(url);
+    if (!res.ok) { console.warn('❌ Could not read youtube-links.txt'); return {}; }
+    text = await res.text();
+  } catch (e) {
+    console.warn('❌ Fetch failed:', e);
+    return {};
   }
 
-  function extractYouTubeId(url) {
-    const match = url.match(
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
-    );
-    return match ? match[1] : null;
+  const sections = {};
+  let currentSection = null;
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+
+  for (const line of lines) {
+    // Detect [Section Name]
+    const sectionMatch = line.match(/^\[(.+)\]$/);
+    if (sectionMatch) {
+      currentSection = sectionMatch[1].trim();
+      sections[currentSection] = [];
+      continue;
+    }
+    if (!currentSection) continue;
+
+    let title = '', rawUrl = line;
+    if (line.includes('|')) {
+      const parts = line.split('|');
+      title  = parts[0].trim();
+      rawUrl = parts[1].trim();
+    }
+    const videoObj = parseVideoUrl(rawUrl, title);
+    if (videoObj) sections[currentSection].push(videoObj);
+    else console.warn('⚠️ Could not parse URL:', rawUrl);
   }
+
+  console.log('🎬 Parsed video sections:', sections);
+  return sections;
+}
+
+// ─────────────────────────────────────
+//  UNIVERSAL URL PARSER
+//  YouTube / Facebook / Instagram
+// ─────────────────────────────────────
+function parseVideoUrl(url, title = '') {
+  // ── YouTube ──
+  const ytMatch = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
+  );
+  if (ytMatch) return {
+    type    : 'youtube',
+    embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?rel=0`,
+    title   : title || 'Guruji — YouTube Video',
+    badge   : '▶️ YouTube'
+  };
+
+  // ── Facebook ──
+  const fbMatch = url.match(/facebook\.com\/(watch\/?\?v=(\d+)|video\/(\d+)|.*\/videos\/(\d+))/);
+  const fbId = fbMatch && (fbMatch[2] || fbMatch[3] || fbMatch[4]);
+  if (fbId) return {
+    type    : 'facebook',
+    embedUrl: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=560`,
+    title   : title || 'Guruji — Facebook Video',
+    badge   : '📘 Facebook'
+  };
+
+  // ── Instagram ──
+  const igMatch = url.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  if (igMatch) return {
+    type    : 'instagram',
+    embedUrl: `https://www.instagram.com/${igMatch[1]}/${igMatch[2]}/embed/`,
+    title   : title || 'Guruji — Instagram Video',
+    badge   : '📸 Instagram'
+  };
+
+  return null;
+}
+
 
   // ─────────────────────────────────────
   //  UTILITIES
@@ -821,16 +883,17 @@
         findSubfolder(ROOT_FOLDER, FOLDER_NAMES.audio),
         findSubfolder(ROOT_FOLDER, FOLDER_NAMES.videos)
       ]);
-      const [photos, audios, driveVideos, youtubeVideos] = await Promise.all([
+      const [photos, audios, driveVideos, videoSections] = await Promise.all([
         photosFolder ? fetchFolderContents(photosFolder.id) : Promise.resolve([]),
         audioFolder  ? fetchFolderContents(audioFolder.id)  : Promise.resolve([]),
         videosFolder ? fetchFolderContents(videosFolder.id) : Promise.resolve([]),
-        fetchYouTubeLinks(rootItems)
+        fetchVideoLinks(rootItems)
       ]);
       buildGallery(photos);
       buildAudio(audios);
-      buildVideos(driveVideos, youtubeVideos);
-      const totalVids = driveVideos.length + youtubeVideos.length;
+      buildVideos(driveVideos, videoSections);
+      const totalVids = driveVideos.length + Object.values(videoSections).flat().length;
+
       document.getElementById('photoCount').textContent = photos.length || '0';
       document.getElementById('audioCount').textContent = audios.length || '0';
       document.getElementById('videoCount').textContent = totalVids    || '0';
