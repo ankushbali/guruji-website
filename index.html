@@ -648,11 +648,13 @@ async function fetchVideoLinks(rootItems) {
 
   const sections = {};
   let currentSection = null;
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+
 
   for (const line of lines) {
     // Detect [Section Name]
-    const sectionMatch = line.match(/^\[(.+)\]$/);
+    const sectionMatch = line.match(/^\[(.+?)\]/);
+
     if (sectionMatch) {
       currentSection = sectionMatch[1].trim();
       sections[currentSection] = [];
@@ -671,7 +673,8 @@ async function fetchVideoLinks(rootItems) {
     else console.warn('⚠️ Could not parse URL:', rawUrl);
   }
 
-  console.log('🎬 Parsed video sections:', sections);
+  //console.log('🎬 Parsed video sections:', sections);
+  console.log('📄 Total lines parsed:', lines.length, lines);
   return sections;
 }
 
