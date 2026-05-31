@@ -652,26 +652,29 @@ async function fetchVideoLinks(rootItems) {
 
 
   for (const line of lines) {
-    // Detect [Section Name]
-    const sectionMatch = line.match(/^\[(.+?)\]/);
-
-    if (sectionMatch) {
-      currentSection = sectionMatch[1].trim();
-      sections[currentSection] = [];
-      continue;
+      // Detect [Section Name] — strip ALL invisible/control characters
+      const cleanLine = line.replace(/[^\x20-\x7E]/g, '').trim();
+      const sectionMatch = cleanLine.match(/^\[(.+?)\]/);
+      if (sectionMatch) {
+        currentSection = sectionMatch[1].trim();
+        sections[currentSection] = [];
+        console.log('📂 Section found:', currentSection);
+        continue;
+      }
+      if (!currentSection) continue;
+  
+      let title = '', rawUrl = cleanLine;
+      if (cleanLine.includes('|')) {
+        const parts = cleanLine.split('|');
+        title  = parts[0].trim();
+        rawUrl = parts[1].trim();
+      }
+      console.log('🎬 Adding video:', title, '→', rawUrl);
+      const videoObj = parseVideoUrl(rawUrl, title);
+      if (videoObj) sections[currentSection].push(videoObj);
+      else console.warn('⚠️ Could not parse URL:', rawUrl);
     }
-    if (!currentSection) continue;
 
-    let title = '', rawUrl = line;
-    if (line.includes('|')) {
-      const parts = line.split('|');
-      title  = parts[0].trim();
-      rawUrl = parts[1].trim();
-    }
-    const videoObj = parseVideoUrl(rawUrl, title);
-    if (videoObj) sections[currentSection].push(videoObj);
-    else console.warn('⚠️ Could not parse URL:', rawUrl);
-  }
 
   //console.log('🎬 Parsed video sections:', sections);
   console.log('📄 Total lines parsed:', lines.length, lines);
