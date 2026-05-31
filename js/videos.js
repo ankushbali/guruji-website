@@ -1,8 +1,9 @@
-// ─────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
 //  VIDEO LINKS PARSER
-//  Supports: YouTube, Facebook, Instagram
-//  Supports: Dynamic [Section] headers
-// ─────────────────────────────────────
+//  Supports: YouTube, Facebook (video/reel), Instagram
+//  Supports: Dynamic [Section] headers from youtube-links.txt
+// ─────────────────────────────────────────────────────────────
+
 async function fetchVideoLinks(rootItems) {
   const txtFile = rootItems.find(f => f.name === YOUTUBE_FILE_NAME);
   if (!txtFile) {
@@ -33,7 +34,7 @@ async function fetchVideoLinks(rootItems) {
   for (const line of lines) {
     const cleanLine = line.replace(/[^\x20-\x7E]/g, '').trim();
 
-    // Detect [Section Name]
+    // ── Detect [Section Name] ──
     const sectionMatch = cleanLine.match(/^\[(.+?)\]/);
     if (sectionMatch) {
       currentSection = sectionMatch[1].trim();
@@ -56,15 +57,16 @@ async function fetchVideoLinks(rootItems) {
     else console.warn('⚠️ Could not parse URL:', rawUrl);
   }
 
-  console.log('📄 Total lines parsed:', lines.length, lines);
+  console.log('📄 Sections parsed:', Object.keys(sections));
   return sections;
 }
 
 
-// ─────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
 //  UNIVERSAL URL PARSER
-//  YouTube / Facebook (all types) / Instagram
-// ─────────────────────────────────────
+//  YouTube / Facebook (all URL types) / Instagram
+// ─────────────────────────────────────────────────────────────
+
 function parseVideoUrl(url, title = '') {
 
   // ── YouTube ──
@@ -79,19 +81,31 @@ function parseVideoUrl(url, title = '') {
     badge    : '▶️ YouTube'
   };
 
-  // ── Facebook (watch, video, videos, reel, share/reels) ──
+  // ── Facebook ──
+  // Covers: /reel/, /reels/, /watch?v=, /video/, /videos/, /share/
   const fbMatch = url.match(
     /facebook\.com(?:\/[^/]+)?\/(?:watch\/?\?v=(\d+)|video\/(\d+)|videos\/(\d+)|reel\/(\d+)|share\/(?:v\/)?(\d+)|reels\/(\d+))/i
   );
   const fbId = fbMatch &&
     (fbMatch[1] || fbMatch[2] || fbMatch[3] || fbMatch[4] || fbMatch[5] || fbMatch[6]);
-  if (fbId || url.includes('facebook.com')) return {
-    type     : 'facebook',
-    embedUrl : null,
-    sourceUrl: url,
-    title    : title || 'Guruji — Facebook Video',
-    badge    : '📘 Facebook'
-  };
+
+  const isReel = /facebook\.com\/reel\//i.test(url);
+
+  if (fbId || url.includes('facebook.com')) {
+    const encodedUrl = encodeURIComponent(url);
+    const embedUrl   = isReel
+      ? `https://www.facebook.com/plugins/video.php?height=476&href=${encodedUrl}&show_text=false&width=267&t=0`
+      : `https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&width=560`;
+
+    return {
+      type     : 'facebook',
+      embedUrl : embedUrl,
+      sourceUrl: url,
+      isReel   : isReel,
+      title    : title || 'Guruji — Facebook Video',
+      badge    : isReel ? '📘 Facebook Reel' : '📘 Facebook Video'
+    };
+  }
 
   // ── Instagram ──
   const igMatch = url.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/);
@@ -107,9 +121,11 @@ function parseVideoUrl(url, title = '') {
 }
 
 
-// ─────────────────────────────────────
-//  BUILD: VIDEOS
-// ─────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+//  BUILD: VIDEOS PAGE
+//  Renders Drive MP4s + all sections from youtube-links.txt
+// ─────────────────────────────────────────────────────────────
+
 function buildVideos(driveVideos, videoSections) {
   const container = document.getElementById('videoGrid');
   container.innerHTML = '';
@@ -152,34 +168,55 @@ function buildVideos(driveVideos, videoSections) {
       card.className = 'card video-card reveal';
       card.style.transitionDelay = `${i * 40}ms`;
 
+      // ── Facebook ──
       if (vid.type === 'facebook') {
-        const fbThumb = `https://i.ibb.co/0jQwxWp/fb-placeholder.jpg`; // fallback
-        card.innerHTML = `
-          <a href="${vid.sourceUrl}"
-             target="_blank" rel="noopener"
-             class="fb-video-thumb">
-            <div class="fb-play-btn">
-              <svg viewBox="0 0 68 48" width="68" height="48">
-                <path class="fb-play-bg" d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z"/>
-                <path class="fb-play-arrow" d="M45 24 27 14v20z"/>
-              </svg>
+
+        if (vid.isReel) {
+          // Portrait reel
+          card.innerHTML = `
+            <div class="fb-reel-wrap">
+              <iframe
+                src="${vid.embedUrl}"
+                width="267" height="476"
+                style="border:none;overflow:hidden"
+                scrolling="no" frameborder="0"
+                allowfullscreen="true"
+                allow="autoplay; clipboard-write; encrypted-media;
+                       picture-in-picture; web-share">
+              </iframe>
             </div>
-            <div class="fb-video-overlay">
-              <span class="fb-open-label">📘 Watch on Facebook</span>
-            </div>
-          </a>
-          <div class="video-info">
-            <div class="video-title">${vid.title}</div>
-            <div class="video-meta">${vid.badge}</div>
-          </div>`;
+            <div class="video-info">
+              <div class="video-title">${vid.title}</div>
+              <div class="video-meta">${vid.badge}</div>
+            </div>`;
+
+        } else {
+          // Landscape video
+          card.innerHTML = `
+            <iframe class="video-embed"
+              src="${vid.embedUrl}"
+              width="560" height="315"
+              style="border:none;overflow:hidden"
+              scrolling="no" frameborder="0"
+              allowfullscreen="true"
+              allow="autoplay; clipboard-write; encrypted-media;
+                     picture-in-picture; web-share">
+            </iframe>
+            <div class="video-info">
+              <div class="video-title">${vid.title}</div>
+              <div class="video-meta">${vid.badge}</div>
+            </div>`;
+        }
+
+      // ── YouTube / Instagram ──
       } else {
-        // ── YouTube / Instagram → iframe embed ──
         card.innerHTML = `
           <iframe class="video-embed"
             src="${vid.embedUrl}"
             title="${vid.title}"
             allow="accelerometer; autoplay; clipboard-write;
-                   encrypted-media; gyroscope; picture-in-picture"
+                   encrypted-media; gyroscope; picture-in-picture;
+                   web-share"
             allowfullscreen loading="lazy">
           </iframe>
           <div class="video-info">
