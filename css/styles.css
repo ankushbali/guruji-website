@@ -480,5 +480,21 @@
   opacity: 1;
 }
 
+/* ── FACEBOOK REEL WRAPPER ── */
+.fb-reel-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  width: 100%;
+  padding: 12px 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+}
+
+.fb-reel-wrap iframe {
+  border-radius: 8px;
+  max-width: 100%;
+}
 
   </style>
