@@ -250,17 +250,23 @@ function buildVideos(driveVideos, videoSections) {
       const card = document.createElement('div');
       card.className = 'card video-card reveal';
       card.style.transitionDelay = `${i * 40}ms`;
+// ── NEW CODE — embedded Drive video player ──
       card.innerHTML = `
-        <a href="https://drive.google.com/file/d/${file.id}/view"
-           target="_blank" rel="noopener"
-           class="drive-video-thumb">
-          <div class="drive-play-icon">▶</div>
-          <div class="drive-video-label">🎬 Click to Watch</div>
-        </a>
+        <div class="drive-video-wrap">
+          <iframe
+            src="https://drive.google.com/file/d/${file.id}/preview"
+            width="640" height="360"
+            allow="autoplay"
+            allowfullscreen
+            loading="lazy"
+            style="border:none; width:100%; height:100%;">
+          </iframe>
+        </div>
         <div class="video-info">
           <div class="video-title">${name}</div>
           <div class="video-meta">🎬 Video${date ? ' · ' + date : ''}</div>
         </div>`;
+
       grid.appendChild(card);
       requestAnimationFrame(() => revealObserver.observe(card));
     });
