@@ -3,30 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Guruji — Digital Shrine</title>
+  <title>🙏Shukrana Guruji🙏</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
 
-    /* ── RESET & BASE ── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --saffron:     #FF6B00;
-      --saffron-lt:  #FF9A3C;
-      --gold:        #D4AF37;
-      --gold-lt:     #F5D97A;
-      --cream:       #FFFAF0;
-      --dark:        #1A0A00;
-      --card-bg:     #FFFFFF;
-      --text-main:   #2D1A00;
-      --text-muted:  #7A5C3A;
-      --shadow:      0 4px 24px rgba(212,175,55,0.13);
-      --radius:      18px;
-      --transition:  0.35s cubic-bezier(.4,0,.2,1);
+      --saffron:    #FF6B00;
+      --saffron-lt: #FF9A3C;
+      --gold:       #D4AF37;
+      --gold-lt:    #F5D97A;
+      --cream:      #FFFAF0;
+      --dark:       #1A0A00;
+      --card-bg:    #FFFFFF;
+      --text-main:  #2D1A00;
+      --text-muted: #7A5C3A;
+      --shadow:     0 4px 24px rgba(212,175,55,0.13);
+      --radius:     18px;
+      --transition: 0.35s cubic-bezier(.4,0,.2,1);
     }
 
     html { scroll-behavior: smooth; }
-
     body {
       font-family: 'Inter', sans-serif;
       background: var(--cream);
@@ -34,7 +32,6 @@
       overflow-x: hidden;
     }
 
-    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--cream); }
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
@@ -43,38 +40,26 @@
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 999;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 5%;
-      height: 64px;
-      background: rgba(255,250,240,0.85);
+      padding: 0 5%; height: 64px;
+      background: rgba(255,250,240,0.88);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(212,175,55,0.2);
     }
-
     .nav-logo {
       font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      font-weight: 700;
+      font-size: 1.3rem; font-weight: 700;
       background: linear-gradient(135deg, var(--saffron), var(--gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
     .nav-links { display: flex; gap: 2rem; list-style: none; }
-
     .nav-links a {
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: color var(--transition);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      text-decoration: none; font-size: 0.85rem; font-weight: 500;
+      color: var(--text-muted); transition: color var(--transition);
+      letter-spacing: 0.04em; text-transform: uppercase;
     }
-
     .nav-links a:hover { color: var(--saffron); }
-
-    /* Hamburger */
     .hamburger {
       display: none; flex-direction: column; gap: 5px;
       cursor: pointer; background: none; border: none;
@@ -90,278 +75,187 @@
       min-height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      text-align: center;
-      padding: 100px 5% 60px;
+      text-align: center; padding: 100px 5% 60px;
       background: linear-gradient(160deg, #fff8ee 0%, #ffe8c2 60%, #fff3e0 100%);
       position: relative; overflow: hidden;
     }
-
-    /* Soft floating orbs - lightweight CSS only */
     #home::before, #home::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.25;
+      content: ''; position: absolute; border-radius: 50%;
+      filter: blur(60px); opacity: 0.25;
       animation: floatOrb 8s ease-in-out infinite alternate;
     }
     #home::before {
       width: 400px; height: 400px;
-      background: var(--saffron);
-      top: -100px; left: -100px;
+      background: var(--saffron); top: -100px; left: -100px;
     }
     #home::after {
       width: 300px; height: 300px;
-      background: var(--gold);
-      bottom: -80px; right: -80px;
+      background: var(--gold); bottom: -80px; right: -80px;
       animation-delay: 3s;
     }
-
     @keyframes floatOrb {
       from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(30px, 20px) scale(1.08); }
+      to   { transform: translate(30px,20px) scale(1.08); }
     }
-
     .diya {
       font-size: 3rem;
       animation: divaGlow 2s ease-in-out infinite alternate;
-      margin-bottom: 1rem;
-      position: relative; z-index: 1;
+      margin-bottom: 1rem; position: relative; z-index: 1;
     }
-
     @keyframes divaGlow {
       from { text-shadow: 0 0 10px #FF6B00aa; transform: scale(1); }
       to   { text-shadow: 0 0 30px #D4AF37cc, 0 0 60px #FF6B0066; transform: scale(1.08); }
     }
-
     .hero-badge {
       display: inline-block;
       background: linear-gradient(135deg, var(--saffron), var(--gold));
-      color: white;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 6px 18px;
-      border-radius: 50px;
-      margin-bottom: 1.2rem;
-      position: relative; z-index: 1;
+      color: white; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 6px 18px; border-radius: 50px;
+      margin-bottom: 1.2rem; position: relative; z-index: 1;
     }
-
     .hero-title {
       font-family: 'Playfair Display', serif;
       font-size: clamp(2.4rem, 6vw, 4.5rem);
-      font-weight: 700;
-      line-height: 1.15;
-      color: var(--dark);
-      margin-bottom: 1rem;
-      position: relative; z-index: 1;
+      font-weight: 700; line-height: 1.15; color: var(--dark);
+      margin-bottom: 1rem; position: relative; z-index: 1;
     }
-
     .hero-title span {
       background: linear-gradient(135deg, var(--saffron), var(--gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
     .hero-quote {
       font-size: clamp(1rem, 2.2vw, 1.25rem);
-      color: var(--text-muted);
-      font-style: italic;
-      max-width: 560px;
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
-      position: relative; z-index: 1;
+      color: var(--text-muted); font-style: italic;
+      max-width: 560px; line-height: 1.7;
+      margin-bottom: 2.5rem; position: relative; z-index: 1;
     }
-
     .hero-cta {
-      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
-      position: relative; z-index: 1;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center; position: relative; z-index: 1;
     }
-
     .btn {
-      padding: 12px 30px;
-      border-radius: 50px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: var(--transition);
-      display: inline-flex; align-items: center; gap: 8px;
-      border: none;
+      padding: 12px 30px; border-radius: 50px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 8px; border: none;
     }
-
     .btn-primary {
       background: linear-gradient(135deg, var(--saffron), var(--gold));
-      color: white;
-      box-shadow: 0 4px 20px rgba(255,107,0,0.3);
+      color: white; box-shadow: 0 4px 20px rgba(255,107,0,0.3);
     }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(255,107,0,0.4);
-    }
-
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,0,0.4); }
     .btn-outline {
-      background: transparent;
-      color: var(--saffron);
+      background: transparent; color: var(--saffron);
       border: 2px solid var(--saffron);
     }
-    .btn-outline:hover {
-      background: var(--saffron);
-      color: white;
-      transform: translateY(-2px);
-    }
+    .btn-outline:hover { background: var(--saffron); color: white; transform: translateY(-2px); }
 
-    /* ── SECTION BASE ── */
-    section {
-      padding: 90px 5%;
-    }
-
+    /* ── SECTIONS ── */
+    section { padding: 90px 5%; }
     .section-label {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--saffron);
-      margin-bottom: 0.5rem;
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--saffron); margin-bottom: 0.5rem;
     }
-
     .section-title {
       font-family: 'Playfair Display', serif;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 0.6rem;
+      font-weight: 700; color: var(--dark); margin-bottom: 0.6rem;
     }
-
     .section-sub {
-      color: var(--text-muted);
-      font-size: 1rem;
-      margin-bottom: 2.5rem;
-      max-width: 500px;
-      line-height: 1.65;
+      color: var(--text-muted); font-size: 1rem;
+      margin-bottom: 2.5rem; max-width: 500px; line-height: 1.65;
     }
-
-    .section-header { margin-bottom: 0.5rem; }
-
-    /* ── DIVIDER ── */
     .gold-divider {
       width: 60px; height: 3px;
       background: linear-gradient(90deg, var(--saffron), var(--gold));
-      border-radius: 10px;
-      margin: 0.6rem 0 1.2rem;
+      border-radius: 10px; margin: 0.6rem 0 1.2rem;
     }
 
-    /* ── CARD BASE ── */
+    /* ── CARD ── */
     .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
       transition: transform var(--transition), box-shadow var(--transition);
       border: 1px solid rgba(212,175,55,0.15);
     }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 36px rgba(212,175,55,0.22);
-    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(212,175,55,0.22); }
 
-    /* ── FADE-IN ANIMATION (Intersection Observer) ── */
+    /* ── REVEAL ── */
     .reveal {
-      opacity: 0;
-      transform: translateY(28px);
+      opacity: 0; transform: translateY(28px);
       transition: opacity 0.55s ease, transform 0.55s ease;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ── ABOUT ── */
     #about { background: #fff; }
-
     .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
     }
-
     .about-img-wrap {
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      aspect-ratio: 3/4;
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); aspect-ratio: 3/4;
       background: linear-gradient(135deg, #ffe8c2, #fff3cd);
       display: flex; align-items: center; justify-content: center;
       font-size: 6rem;
     }
-
-    .about-img-wrap img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
-
-    .about-stats {
-      display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap;
-    }
-
+    .about-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .about-stats { display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap; }
     .stat-card {
-      flex: 1; min-width: 100px;
-      text-align: center;
+      flex: 1; min-width: 100px; text-align: center;
       padding: 1.2rem 1rem;
       background: linear-gradient(135deg, #fff8ee, #ffe8c2);
-      border-radius: 14px;
-      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 14px; border: 1px solid rgba(212,175,55,0.2);
     }
-
     .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700;
       background: linear-gradient(135deg, var(--saffron), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-
     .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* ── LOADING & EMPTY ── */
+    .loading-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 3rem; gap: 1rem; color: var(--text-muted);
+      font-size: 0.95rem; grid-column: 1 / -1;
+    }
+    .spinner {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 3px solid rgba(212,175,55,0.2);
+      border-top-color: var(--saffron);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state {
+      text-align: center; padding: 2.5rem;
+      color: var(--text-muted); font-size: 0.9rem;
+      grid-column: 1 / -1;
+    }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 0.6rem; }
 
     /* ── GALLERY ── */
     #gallery { background: var(--cream); }
-
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1.2rem;
     }
-
-    .gallery-card {
-      aspect-ratio: 1;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .gallery-card img,
-    .gallery-card .img-placeholder {
+    .gallery-card { aspect-ratio: 1; cursor: pointer; position: relative; overflow: hidden; }
+    .gallery-card img {
       width: 100%; height: 100%; object-fit: cover;
       transition: transform 0.45s ease;
     }
-
-    .img-placeholder {
-      display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, #ffe8c2, #ffd59e);
-      font-size: 3rem;
-    }
-
-    .gallery-card:hover img,
-    .gallery-card:hover .img-placeholder { transform: scale(1.07); }
-
+    .gallery-card:hover img { transform: scale(1.07); }
     .gallery-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(26,10,0,0.55), transparent);
+      background: linear-gradient(to top, rgba(26,10,0,0.6), transparent);
       opacity: 0; transition: opacity var(--transition);
       display: flex; align-items: flex-end; padding: 1rem;
       color: white; font-size: 0.85rem; font-weight: 500;
@@ -372,213 +266,81 @@
     #lightbox {
       display: none; position: fixed; inset: 0; z-index: 9999;
       background: rgba(0,0,0,0.92);
-      align-items: center; justify-content: center;
-      flex-direction: column;
+      align-items: center; justify-content: center; flex-direction: column;
     }
     #lightbox.open { display: flex; }
     #lightbox img {
       max-width: 90vw; max-height: 82vh;
-      border-radius: 12px;
-      box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+      border-radius: 12px; box-shadow: 0 8px 48px rgba(0,0,0,0.6);
     }
     #lightbox-close {
       position: absolute; top: 20px; right: 24px;
       font-size: 2rem; color: white; cursor: pointer;
-      background: none; border: none;
-      transition: color var(--transition);
+      background: none; border: none; transition: color var(--transition);
     }
     #lightbox-close:hover { color: var(--gold); }
-    #lightbox-caption {
-      color: rgba(255,255,255,0.7);
-      margin-top: 1rem; font-size: 0.9rem; font-style: italic;
-    }
+    #lightbox-caption { color: rgba(255,255,255,0.7); margin-top: 1rem; font-size: 0.9rem; font-style: italic; }
 
     /* ── AUDIO ── */
     #audio { background: #fff; }
-
-    .audio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.2rem;
-    }
-
-    .audio-card {
-      padding: 1.4rem 1.6rem;
-      display: flex; flex-direction: column; gap: 0.9rem;
-    }
-
+    .audio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.2rem; }
+    .audio-card { padding: 1.4rem 1.6rem; display: flex; flex-direction: column; gap: 0.9rem; }
     .audio-info { display: flex; align-items: center; gap: 1rem; }
-
     .audio-icon {
       width: 48px; height: 48px; border-radius: 12px;
       background: linear-gradient(135deg, var(--saffron), var(--gold));
       display: flex; align-items: center; justify-content: center;
       font-size: 1.4rem; flex-shrink: 0;
-      color: white;
     }
-
     .audio-title { font-weight: 600; font-size: 0.95rem; color: var(--dark); }
     .audio-sub   { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-
-    .audio-card audio {
-      width: 100%;
-      border-radius: 50px;
-      accent-color: var(--saffron);
-    }
+    .audio-card audio { width: 100%; border-radius: 50px; accent-color: var(--saffron); }
 
     /* ── VIDEOS ── */
     #videos { background: var(--cream); }
-
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.4rem;
-    }
-
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.4rem; }
     .video-card { overflow: hidden; }
-
-    .video-embed {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border: none;
-      display: block;
-      background: #000;
-    }
-
+    .video-embed { width: 100%; aspect-ratio: 16/9; border: none; display: block; background: #000; }
     .video-info { padding: 1.1rem 1.2rem; }
     .video-title { font-weight: 600; font-size: 0.95rem; color: var(--dark); }
     .video-meta  { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
 
     /* ── QUOTES ── */
-    #quotes {
-      background: linear-gradient(135deg, #1A0A00, #3D1C00);
-      color: white;
-    }
-
+    #quotes { background: linear-gradient(135deg, #1A0A00, #3D1C00); color: white; }
     #quotes .section-title { color: white; }
     #quotes .section-sub   { color: rgba(255,255,255,0.6); }
     #quotes .section-label { color: var(--gold-lt); }
-
-    .quotes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.4rem;
-    }
-
+    .quotes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.4rem; }
     .quote-card {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(212,175,55,0.25);
-      border-radius: var(--radius);
-      padding: 1.8rem;
+      border-radius: var(--radius); padding: 1.8rem;
       transition: transform var(--transition), background var(--transition);
     }
-
-    .quote-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255,255,255,0.1);
-    }
-
-    .quote-mark {
-      font-size: 3rem; line-height: 1;
-      color: var(--gold);
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 0.5rem;
-      opacity: 0.7;
-    }
-
-    .quote-text {
-      font-style: italic;
-      font-size: 0.97rem;
-      line-height: 1.75;
-      color: rgba(255,255,255,0.88);
-      margin-bottom: 1rem;
-    }
-
-    .quote-author {
-      font-size: 0.8rem;
-      color: var(--gold-lt);
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
+    .quote-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
+    .quote-mark { font-size: 3rem; line-height: 1; color: var(--gold); font-family: 'Playfair Display', serif; margin-bottom: 0.5rem; opacity: 0.7; }
+    .quote-text { font-style: italic; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.88); margin-bottom: 1rem; }
+    .quote-author { font-size: 0.8rem; color: var(--gold-lt); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
 
     /* ── CONTRIBUTE ── */
     #contribute { background: #fff; }
-
     .contribute-card {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 2.5rem;
-      text-align: center;
-      border-radius: var(--radius);
+      max-width: 640px; margin: 0 auto; padding: 2.5rem;
+      text-align: center; border-radius: var(--radius);
       background: linear-gradient(135deg, #fff8ee, #ffe8c2);
-      border: 1px solid rgba(212,175,55,0.3);
-      box-shadow: var(--shadow);
+      border: 1px solid rgba(212,175,55,0.3); box-shadow: var(--shadow);
     }
-
-    .contribute-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      color: var(--dark);
-      margin-bottom: 0.6rem;
-    }
-
-    .contribute-card p {
-      color: var(--text-muted);
-      margin-bottom: 1.8rem;
-      line-height: 1.65;
-    }
-
-    .form-group { margin-bottom: 1rem; text-align: left; }
-
-    .form-group label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid rgba(212,175,55,0.3);
-      border-radius: 10px;
-      font-size: 0.92rem;
-      font-family: 'Inter', sans-serif;
-      background: white;
-      color: var(--text-main);
-      transition: border-color var(--transition);
-      outline: none;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      border-color: var(--saffron);
-      box-shadow: 0 0 0 3px rgba(255,107,0,0.1);
-    }
-
-    .form-group textarea { resize: vertical; min-height: 90px; }
+    .contribute-card h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--dark); margin-bottom: 0.6rem; }
+    .contribute-card p { color: var(--text-muted); margin-bottom: 1.8rem; line-height: 1.65; }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--dark);
-      color: rgba(255,255,255,0.6);
-      text-align: center;
-      padding: 2rem 5%;
-      font-size: 0.85rem;
+      background: var(--dark); color: rgba(255,255,255,0.6);
+      text-align: center; padding: 2rem 5%; font-size: 0.85rem;
     }
-
     footer span {
       background: linear-gradient(135deg, var(--saffron), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       font-weight: 600;
     }
 
@@ -586,12 +348,9 @@
     @media (max-width: 768px) {
       .nav-links { display: none; flex-direction: column; gap: 1rem; }
       .nav-links.open {
-        display: flex;
-        position: absolute; top: 64px; left: 0; right: 0;
-        background: rgba(255,250,240,0.97);
-        backdrop-filter: blur(12px);
-        padding: 1.5rem 5%;
-        border-bottom: 1px solid rgba(212,175,55,0.2);
+        display: flex; position: absolute; top: 64px; left: 0; right: 0;
+        background: rgba(255,250,240,0.97); backdrop-filter: blur(12px);
+        padding: 1.5rem 5%; border-bottom: 1px solid rgba(212,175,55,0.2);
       }
       .hamburger { display: flex; }
       .about-grid { grid-template-columns: 1fr; }
@@ -600,12 +359,11 @@
 
   </style>
 </head>
-
 <body>
 
-<!-- ═══════════════ NAV ═══════════════ -->
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">🕉️ TBD</div>
+  <div class="nav-logo">🕉️ Guruji</div>
   <ul class="nav-links" id="navLinks">
     <li><a href="#about">About</a></li>
     <li><a href="#gallery">Gallery</a></li>
@@ -619,317 +377,543 @@
   </button>
 </nav>
 
-<!-- ═══════════════ HERO ═══════════════ -->
+<!-- HERO -->
 <section id="home">
   <div class="diya">🪔</div>
   <span class="hero-badge">✨ Digital Shrine</span>
-  <h1 class="hero-title">
-    A Sacred Space for<br/><span>TBD Guruji</span>
-  </h1>
-  <p class="hero-quote">
-    "The light of a true Guru never fades — it lives in every heart that has been touched by grace."
-  </p>
+  <h1 class="hero-title">A Sacred Space for<br/><span>Guruji</span></h1>
+  <p class="hero-quote">"The light of a true Guru never fades — it lives in every heart that has been touched by grace."</p>
   <div class="hero-cta">
     <a href="#gallery" class="btn btn-primary">🖼️ View Gallery</a>
-    <a href="#audio" class="btn btn-outline">🎵 Listen</a>
+    <a href="#audio"   class="btn btn-outline">🎵 Listen</a>
   </div>
 </section>
 
-<!-- ═══════════════ ABOUT ═══════════════ -->
+<!-- ABOUT -->
 <section id="about">
   <div class="reveal">
     <span class="section-label">🙏 Who is Guruji</span>
-    <h2 class="section-title">About TBD Guruji</h2>
+    <h2 class="section-title">About Guruji</h2>
     <div class="gold-divider"></div>
     <div class="about-grid">
-      <div class="about-img-wrap">
-        <!-- Replace src with real image path -->
-        <div style="font-size:6rem;">🕉️</div>
+      <div class="about-img-wrap" id="aboutImage">
+        <span>🕉️</span>
       </div>
       <div>
         <p class="section-sub">
-          TBD Guruji has been a beacon of light, love, and wisdom for countless devotees. 
-          His teachings transcend religion and touch the very core of the human soul — 
-          guiding all who seek with an open heart.
+          Guruji has been a beacon of light, love, and wisdom for countless devotees.
+          His teachings transcend religion and touch the very core of the human soul.
         </p>
-        <p style="color:var(--text-muted);line-height:1.75;font-size:0.95rem;">
-          Born with a divine purpose, Guruji dedicated his life to spreading peace, 
-          devotion, and spiritual awakening. Through satsangs, bhajans, and timeless 
-          wisdom — his grace continues to uplift every soul that comes in his shelter.
+        <p style="color:var(--text-muted);line-height:1.75;font-size:0.95rem;margin-bottom:1rem;">
+          Through satsangs, bhajans, and timeless wisdom — his grace continues to uplift
+          every soul that comes in his shelter. This shrine is a living collection of
+          his divine presence, updated automatically from our shared Drive folder.
         </p>
         <div class="about-stats">
-          <div class="stat-card">
-            <div class="stat-num">∞</div>
-            <div class="stat-label">Devotees</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">🎵</div>
-            <div class="stat-label">Bhajans</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num">🙏</div>
-            <div class="stat-label">Blessings</div>
-          </div>
+          <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Devotees</div></div>
+          <div class="stat-card"><div class="stat-num" id="photoCount">…</div><div class="stat-label">Photos</div></div>
+          <div class="stat-card"><div class="stat-num" id="audioCount">…</div><div class="stat-label">Bhajans</div></div>
+          <div class="stat-card"><div class="stat-num" id="videoCount">…</div><div class="stat-label">Videos</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ GALLERY ═══════════════ -->
+<!-- GALLERY -->
 <section id="gallery">
-  <div class="reveal section-header">
+  <div class="reveal">
     <span class="section-label">🖼️ Sacred Images</span>
     <h2 class="section-title">Photo Gallery</h2>
     <div class="gold-divider"></div>
     <p class="section-sub">A visual journey through Guruji's divine presence and sacred moments.</p>
   </div>
-
-  <div class="gallery-grid">
-    <!-- 
-      HOW TO ADD YOUR PHOTOS:
-      Replace the img src with:
-      1. A local file:  src="photos/guruji1.jpg"
-      2. Google Drive:  src="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"
-
-      To get Google Drive direct link:
-      - Right-click file → Share → Copy link
-      - Extract the ID from: drive.google.com/file/d/FILE_ID/view
-      - Use: https://drive.google.com/uc?export=view&id=FILE_ID
-    -->
-    <div class="card gallery-card reveal" onclick="openLightbox(this, 'Guruji — Darshan')">
-      <div class="img-placeholder">🕉️</div>
-      <div class="gallery-overlay">Guruji — Darshan</div>
-    </div>
-    <div class="card gallery-card reveal" onclick="openLightbox(this, 'Satsang Moment')">
-      <div class="img-placeholder">🙏</div>
-      <div class="gallery-overlay">Satsang Moment</div>
-    </div>
-    <div class="card gallery-card reveal" onclick="openLightbox(this, 'Divine Blessing')">
-      <div class="img-placeholder">🪷</div>
-      <div class="gallery-overlay">Divine Blessing</div>
-    </div>
-    <div class="card gallery-card reveal" onclick="openLightbox(this, 'Sacred Ceremony')">
-      <div class="img-placeholder">🔱</div>
-      <div class="gallery-overlay">Sacred Ceremony</div>
-    </div>
-    <div class="card gallery-card reveal" onclick="openLightbox(this, 'Guruji's Grace')">
-      <div class="img-placeholder">✨</div>
-      <div class="gallery-overlay">Guruji's Grace</div>
-    </div>
-    <div class="card gallery-card reveal" onclick="openLightbox(this, 'Puja Evening')">
-      <div class="img-placeholder">🪔</div>
-      <div class="gallery-overlay">Puja Evening</div>
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <span>Loading sacred images… 🙏</span>
     </div>
   </div>
 </section>
 
-<!-- Lightbox -->
+<!-- LIGHTBOX -->
 <div id="lightbox">
   <button id="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lightbox-img" src="" alt=""/>
   <div id="lightbox-caption"></div>
 </div>
 
-<!-- ═══════════════ AUDIO ═══════════════ -->
+<!-- AUDIO -->
 <section id="audio">
-  <div class="reveal section-header">
+  <div class="reveal">
     <span class="section-label">🎵 Sacred Sounds</span>
-    <h2 class="section-title">Bhajans & Teachings</h2>
+    <h2 class="section-title">Bhajans &amp; Teachings</h2>
     <div class="gold-divider"></div>
     <p class="section-sub">Listen to divine bhajans, satsang recordings, and spiritual teachings.</p>
   </div>
-
-  <div class="audio-grid">
-    <!--
-      HOW TO ADD AUDIO:
-      Replace the src in <source> with:
-      1. Local file:    src="audio/bhajan1.mp3"
-      2. Google Drive:  src="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"
-    -->
-    <div class="card audio-card reveal">
-      <div class="audio-info">
-        <div class="audio-icon">🎵</div>
-        <div>
-          <div class="audio-title">Bhajan Title Here</div>
-          <div class="audio-sub">Satsang · Add date</div>
-        </div>
-      </div>
-      <audio controls preload="none">
-        <source src="" type="audio/mpeg"/>
-        Your browser does not support audio.
-      </audio>
-    </div>
-
-    <div class="card audio-card reveal">
-      <div class="audio-info">
-        <div class="audio-icon">🙏</div>
-        <div>
-          <div class="audio-title">Teaching / Pravachan</div>
-          <div class="audio-sub">Discourse · Add date</div>
-        </div>
-      </div>
-      <audio controls preload="none">
-        <source src="" type="audio/mpeg"/>
-        Your browser does not support audio.
-      </audio>
-    </div>
-
-    <div class="card audio-card reveal">
-      <div class="audio-info">
-        <div class="audio-icon">🪔</div>
-        <div>
-          <div class="audio-title">Aarti / Prayer</div>
-          <div class="audio-sub">Evening Prayer · Add date</div>
-        </div>
-      </div>
-      <audio controls preload="none">
-        <source src="" type="audio/mpeg"/>
-        Your browser does not support audio.
-      </audio>
+  <div class="audio-grid" id="audioGrid">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <span>Loading audio… 🎵</span>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ VIDEOS ═══════════════ -->
+<!-- VIDEOS -->
 <section id="videos">
-  <div class="reveal section-header">
+  <div class="reveal">
     <span class="section-label">🎬 Divine Moments</span>
     <h2 class="section-title">Videos</h2>
     <div class="gold-divider"></div>
     <p class="section-sub">Watch satsangs, discourses, and blessed moments with Guruji.</p>
   </div>
-
-  <div class="video-grid">
-    <!--
-      HOW TO ADD YOUTUBE VIDEO:
-      Get embed link from YouTube:
-      - Open video → Share → Embed → copy the src URL
-      - It looks like: https://www.youtube.com/embed/VIDEO_ID
-
-      HOW TO ADD MP4 from Google Drive:
-      - Use: https://drive.google.com/file/d/FILE_ID/preview
-    -->
-    <div class="card video-card reveal">
-      <iframe class="video-embed"
-        src="https://www.youtube.com/embed/3AtDnEC4zak"
-        title="Guruji Satsang"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen loading="lazy">
-      </iframe>
-      <div class="video-info">
-        <div class="video-title">Satsang Title Here</div>
-        <div class="video-meta">YouTube · Add date</div>
-      </div>
-    </div>
-
-    <div class="card video-card reveal">
-      <iframe class="video-embed"
-        src="https://www.youtube.com/embed/3AtDnEC4zak"
-        title="Guruji Teaching"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen loading="lazy">
-      </iframe>
-      <div class="video-info">
-        <div class="video-title">Discourse / Teaching</div>
-        <div class="video-meta">YouTube · Add date</div>
-      </div>
-    </div>
-
-    <div class="card video-card reveal">
-      <!-- MP4 from Google Drive example -->
-      <iframe class="video-embed"
-        src="https://drive.google.com/file/d/YOUR_FILE_ID/preview"
-        title="Guruji Video"
-        allowfullscreen loading="lazy">
-      </iframe>
-      <div class="video-info">
-        <div class="video-title">Special Video</div>
-        <div class="video-meta">Video · Add date</div>
-      </div>
+  <div class="video-grid" id="videoGrid">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <span>Loading videos… 🎬</span>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ QUOTES ═══════════════ -->
+<!-- QUOTES -->
 <section id="quotes">
-  <div class="reveal section-header">
+  <div class="reveal">
     <span class="section-label">💛 Wisdom</span>
     <h2 class="section-title">Guruji's Teachings</h2>
     <div class="gold-divider" style="background:linear-gradient(90deg,var(--gold),var(--gold-lt));"></div>
-    <p class="section-sub" style="color:rgba(255,255,255,0.6);">
-      Timeless words that guide, heal, and uplift every soul.
-    </p>
+    <p class="section-sub">Timeless words that guide, heal, and uplift every soul.</p>
   </div>
-
   <div class="quotes-grid">
     <div class="quote-card reveal">
       <div class="quote-mark">"</div>
-      <p class="quote-text">Add Guruji's quote or teaching here. Replace this with his actual words of wisdom.</p>
-      <div class="quote-author">— TBD Guruji</div>
+      <p class="quote-text">Love is the only language the soul understands. Speak it in every moment, in every breath.</p>
+      <div class="quote-author">— Guruji</div>
     </div>
     <div class="quote-card reveal">
       <div class="quote-mark">"</div>
-      <p class="quote-text">A second beautiful teaching or quote from Guruji goes here. His words light the path.</p>
-      <div class="quote-author">— TBD Guruji</div>
+      <p class="quote-text">When you sit in silence, you are never alone. The Guru's grace is always present, always near.</p>
+      <div class="quote-author">— Guruji</div>
     </div>
     <div class="quote-card reveal">
       <div class="quote-mark">"</div>
-      <p class="quote-text">A third quote or blessing from Guruji. Every word is a seed of grace and love.</p>
-      <div class="quote-author">— TBD Guruji</div>
+      <p class="quote-text">A single moment of true devotion can wash away lifetimes of sorrow. Bow with a full heart.</p>
+      <div class="quote-author">— Guruji</div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════ CONTRIBUTE ═══════════════ -->
+<!-- CONTRIBUTE -->
 <section id="contribute">
   <div class="reveal">
-    <span class="section-label">📬 Share & Contribute</span>
+    <span class="section-label">📂 Share Blessings</span>
     <h2 class="section-title">Add Your Media</h2>
     <div class="gold-divider"></div>
   </div>
-
   <div class="contribute-card reveal">
     <div style="font-size:2.5rem;margin-bottom:0.6rem;">🙏</div>
-    <h3>Share Guruji's Blessings</h3>
-    <p>Have photos, audio, or videos of Guruji? Share them here so this shrine grows with love from the entire family.</p>
-
-    <div class="form-group">
-      <label>Your Name</label>
-      <input type="text" placeholder="Enter your name"/>
+    <h3>How to Contribute</h3>
+    <p>
+      Simply add your photos, audio, or videos into the correct folder on our
+      shared Google Drive — they will appear here <strong>automatically!</strong>
+      For YouTube links, add them to the <code>youtube-links.txt</code> file.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;text-align:center;margin-top:0.5rem;">
+      <div style="padding:1rem;background:white;border-radius:12px;border:1px solid rgba(212,175,55,0.2);">
+        <div style="font-size:1.8rem;">📸</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem;">Add to<br/><strong>Photos/</strong> folder</div>
+      </div>
+      <div style="padding:1rem;background:white;border-radius:12px;border:1px solid rgba(212,175,55,0.2);">
+        <div style="font-size:1.8rem;">🎵</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem;">Add to<br/><strong>Audio/</strong> folder</div>
+      </div>
+      <div style="padding:1rem;background:white;border-radius:12px;border:1px solid rgba(212,175,55,0.2);">
+        <div style="font-size:1.8rem;">🎬</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem;">Add to<br/><strong>Videos/</strong> folder</div>
+      </div>
+      <div style="padding:1rem;background:white;border-radius:12px;border:1px solid rgba(212,175,55,0.2);">
+        <div style="font-size:1.8rem;">▶️</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem;">YouTube links in<br/><strong>youtube-links.txt</strong></div>
+      </div>
     </div>
-    <div class="form-group">
-      <label>Type of Media</label>
-      <select>
-        <option value="">Select type...</option>
-        <option>📸 Photo</option>
-        <option>🎵 Audio / Bhajan</option>
-        <option>🎬 Video</option>
-        <option>📖 Quote / Teaching</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Google Drive Link or Description</label>
-      <textarea placeholder="Paste a Google Drive link or describe what you'd like to add..."></textarea>
-    </div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="handleSubmit()">
-      🙏 Submit Contribution
-    </button>
   </div>
 </section>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
+<!-- FOOTER -->
 <footer>
-  <p>🕉️ Made with 🧡 and devotion for <span>TBD Guruji</span></p>
+  <p>🕉️ Made with 🧡 and devotion for <span>Guruji</span></p>
   <p style="margin-top:0.4rem;font-size:0.78rem;opacity:0.5;">
-    A digital shrine created with love by the family · All rights preserved in devotion
+    A digital shrine · Powered by Google Drive · Auto-updates with every new file
   </p>
 </footer>
 
-<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
 <script>
 
-  // ── Hamburger Menu ──
+  // ╔══════════════════════════════════════╗
+  // ║   🔧  CONFIGURATION  — EDIT HERE     ║
+  // ╚══════════════════════════════════════╝
+  const API_KEY      = 'AIzaSyBSnQ0YyLQvsAWAkaiV5ZKBj7df3ghD7S4';               // ← Paste your API key
+  const ROOT_FOLDER  = '1ZwZNt8Aa_XqnJw1_U8_ST0afcD59fBcY'; // ← Your root folder (set!)
+
+  // Subfolder names exactly as they appear in Drive (case-sensitive)
+  const FOLDER_NAMES = {
+    photos : 'Photos',
+    audio  : 'Audio',
+    videos : 'Videos'
+  };
+  const YOUTUBE_FILE_NAME = 'youtube-links.txt';
+
+  // ─────────────────────────────────────────
+  //  DRIVE API HELPERS
+  // ─────────────────────────────────────────
+
+  // Fetch all items inside a given folder ID
+  async function fetchFolderContents(folderId) {
+    const files = [];
+    let pageToken = '';
+    do {
+      const url = new URL('https://www.googleapis.com/drive/v3/files');
+      url.searchParams.set('q',        `'${folderId}' in parents and trashed = false`);
+      url.searchParams.set('key',      API_KEY);
+      url.searchParams.set('fields',   'nextPageToken, files(id, name, mimeType, createdTime)');
+      url.searchParams.set('pageSize', '100');
+      url.searchParams.set('orderBy',  'name');
+      if (pageToken) url.searchParams.set('pageToken', pageToken);
+
+      const res  = await fetch(url.toString());
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error.message);
+      files.push(...(data.files || []));
+      pageToken = data.nextPageToken || '';
+    } while (pageToken);
+    return files;
+  }
+
+  // Find a specific subfolder by name inside a parent folder
+  async function findSubfolder(parentId, name) {
+    const url = new URL('https://www.googleapis.com/drive/v3/files');
+    url.searchParams.set('q',      `'${parentId}' in parents and name = '${name}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
+    url.searchParams.set('key',    API_KEY);
+    url.searchParams.set('fields', 'files(id, name)');
+    const res  = await fetch(url.toString());
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.files && data.files[0] ? data.files[0] : null;
+  }
+
+  // Find the youtube-links.txt file in root and read its text content
+  async function fetchYouTubeLinks(rootItems) {
+    const txtFile = rootItems.find(f => f.name === YOUTUBE_FILE_NAME);
+    if (!txtFile) return [];
+
+    // Fetch the raw text content
+    const url = `https://www.googleapis.com/drive/v3/files/${txtFile.id}?alt=media&key=${API_KEY}`;
+    const res  = await fetch(url);
+    if (!res.ok) return [];
+    const text = await res.text();
+
+    // Parse lines — support formats:
+    //   https://www.youtube.com/watch?v=VIDEO_ID
+    //   https://youtu.be/VIDEO_ID
+    //   https://www.youtube.com/embed/VIDEO_ID
+    //   Optional: "Title | URL"
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    const results = [];
+
+    for (const line of lines) {
+      // Check for "Title | URL" format
+      let title = '';
+      let rawUrl = line;
+      if (line.includes('|')) {
+        const parts = line.split('|');
+        title  = parts[0].trim();
+        rawUrl = parts[1].trim();
+      }
+
+      const videoId = extractYouTubeId(rawUrl);
+      if (videoId) {
+        results.push({
+          id    : videoId,
+          title : title || `Guruji — YouTube Video`,
+          type  : 'youtube'
+        });
+      }
+    }
+    return results;
+  }
+
+  // Extract YouTube video ID from any YouTube URL format
+  function extractYouTubeId(url) {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
+    ];
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    return null;
+  }
+
+  // Clean filename for display
+  function cleanName(name) {
+    return name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+  }
+
+  // Format date nicely
+  function formatDate(isoString) {
+    if (!isoString) return '';
+    return new Date(isoString).toLocaleDateString('en-IN', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+
+  // ─────────────────────────────────────────
+  //  BUILD: GALLERY
+  // ─────────────────────────────────────────
+  function buildGallery(images) {
+    const grid = document.getElementById('galleryGrid');
+    grid.innerHTML = '';
+
+    if (!images.length) {
+      grid.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">🖼️</div>
+        <p>No photos yet — add images to the <strong>Photos/</strong> folder in Drive!</p>
+      </div>`;
+      return;
+    }
+
+    // Use first image as about section portrait too
+    const firstSrc = `https://drive.google.com/uc?export=view&id=${images[0].id}`;
+    const aboutWrap = document.getElementById('aboutImage');
+    aboutWrap.innerHTML = `<img src="${firstSrc}" alt="Guruji" onerror="this.parentElement.innerHTML='<span>🕉️</span>'"/>`;
+
+    images.forEach((file, i) => {
+      const src  = `https://drive.google.com/uc?export=view&id=${file.id}`;
+      const name = cleanName(file.name);
+
+      const card = document.createElement('div');
+      card.className = 'card gallery-card reveal';
+      card.style.transitionDelay = `${i * 40}ms`;
+      card.innerHTML = `
+        <img src="${src}" alt="${name}" loading="lazy"
+             onerror="this.parentElement.style.display='none'"/>
+        <div class="gallery-overlay">${name}</div>
+      `;
+      card.addEventListener('click', () => openLightbox(src, name));
+      grid.appendChild(card);
+      requestAnimationFrame(() => revealObserver.observe(card));
+    });
+  }
+
+  // ─────────────────────────────────────────
+  //  BUILD: AUDIO
+  // ─────────────────────────────────────────
+  function buildAudio(audios) {
+    const grid = document.getElementById('audioGrid');
+    grid.innerHTML = '';
+
+    if (!audios.length) {
+      grid.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">🎵</div>
+        <p>No audio yet — add MP3 files to the <strong>Audio/</strong> folder in Drive!</p>
+      </div>`;
+      return;
+    }
+
+    const icons = ['🎵','🙏','🪔','🕉️','🪷','✨','🌸','🔔'];
+
+    audios.forEach((file, i) => {
+      const src  = `https://drive.google.com/uc?export=view&id=${file.id}`;
+      const name = cleanName(file.name);
+      const date = formatDate(file.createdTime);
+      const icon = icons[i % icons.length];
+
+      const card = document.createElement('div');
+      card.className = 'card audio-card reveal';
+      card.style.transitionDelay = `${i * 40}ms`;
+      card.innerHTML = `
+        <div class="audio-info">
+          <div class="audio-icon">${icon}</div>
+          <div>
+            <div class="audio-title">${name}</div>
+            <div class="audio-sub">${date || 'Satsang'}</div>
+          </div>
+        </div>
+        <audio controls preload="none">
+          <source src="${src}" type="audio/mpeg"/>
+          Your browser does not support audio.
+        </audio>
+      `;
+      grid.appendChild(card);
+      requestAnimationFrame(() => revealObserver.observe(card));
+    });
+  }
+
+  // ─────────────────────────────────────────
+  //  BUILD: VIDEOS  (Drive MP4s + YouTube)
+  // ─────────────────────────────────────────
+  function buildVideos(driveVideos, youtubeVideos) {
+    const grid = document.getElementById('videoGrid');
+    grid.innerHTML = '';
+
+    const total = driveVideos.length + youtubeVideos.length;
+
+    if (!total) {
+      grid.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">🎬</div>
+        <p>No videos yet — add MP4s to <strong>Videos/</strong> folder or YouTube links to <strong>youtube-links.txt</strong>!</p>
+      </div>`;
+      return;
+    }
+
+    // YouTube videos first
+    youtubeVideos.forEach((vid, i) => {
+      const embedSrc = `https://www.youtube.com/embed/${vid.id}`;
+      const card = document.createElement('div');
+      card.className = 'card video-card reveal';
+      card.style.transitionDelay = `${i * 40}ms`;
+      card.innerHTML = `
+        <iframe class="video-embed"
+          src="${embedSrc}"
+          title="${vid.title}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy">
+        </iframe>
+        <div class="video-info">
+          <div class="video-title">${vid.title}</div>
+          <div class="video-meta">▶️ YouTube</div>
+        </div>
+      `;
+      grid.appendChild(card);
+      requestAnimationFrame(() => revealObserver.observe(card));
+    });
+
+    // Drive MP4 videos
+    driveVideos.forEach((file, i) => {
+      const src  = `https://drive.google.com/file/d/${file.id}/preview`;
+      const name = cleanName(file.name);
+      const date = formatDate(file.createdTime);
+
+      const card = document.createElement('div');
+      card.className = 'card video-card reveal';
+      card.style.transitionDelay = `${(youtubeVideos.length + i) * 40}ms`;
+      card.innerHTML = `
+        <iframe class="video-embed"
+          src="${src}"
+          title="${name}"
+          allowfullscreen loading="lazy">
+        </iframe>
+        <div class="video-info">
+          <div class="video-title">${name}</div>
+          <div class="video-meta">🎬 Video${date ? ' · ' + date : ''}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+      requestAnimationFrame(() => revealObserver.observe(card));
+    });
+  }
+
+  // ─────────────────────────────────────────
+  //  ERROR STATES
+  // ─────────────────────────────────────────
+  function showError(message) {
+    ['galleryGrid','audioGrid','videoGrid'].forEach(id => {
+      document.getElementById(id).innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <p><strong>Error:</strong> ${message}</p>
+          <p style="margin-top:0.5rem;font-size:0.8rem;opacity:0.7;">
+            Check that your API key is correct and Google Drive API is enabled.
+          </p>
+        </div>`;
+    });
+    ['photoCount','audioCount','videoCount'].forEach(id => {
+      document.getElementById(id).textContent = '!';
+    });
+  }
+
+  // ─────────────────────────────────────────
+  //  MAIN INIT
+  // ─────────────────────────────────────────
+  async function init() {
+    try {
+
+      // Step 1 — Fetch root folder contents (to find subfolders + youtube-links.txt)
+      const rootItems = await fetchFolderContents(ROOT_FOLDER);
+
+      // Step 2 — Find each subfolder by name
+      const [photosFolder, audioFolder, videosFolder] = await Promise.all([
+        findSubfolder(ROOT_FOLDER, FOLDER_NAMES.photos),
+        findSubfolder(ROOT_FOLDER, FOLDER_NAMES.audio),
+        findSubfolder(ROOT_FOLDER, FOLDER_NAMES.videos)
+      ]);
+
+      // Step 3 — Fetch contents of each subfolder (parallel)
+      const [photos, audios, driveVideos, youtubeVideos] = await Promise.all([
+        photosFolder  ? fetchFolderContents(photosFolder.id)  : Promise.resolve([]),
+        audioFolder   ? fetchFolderContents(audioFolder.id)   : Promise.resolve([]),
+        videosFolder  ? fetchFolderContents(videosFolder.id)  : Promise.resolve([]),
+        fetchYouTubeLinks(rootItems)
+      ]);
+
+      // Step 4 — Build UI
+      buildGallery(photos);
+      buildAudio(audios);
+      buildVideos(driveVideos, youtubeVideos);
+
+      // Step 5 — Update stats
+      const totalVideos = driveVideos.length + youtubeVideos.length;
+      document.getElementById('photoCount').textContent = photos.length  || '0';
+      document.getElementById('audioCount').textContent = audios.length  || '0';
+      document.getElementById('videoCount').textContent = totalVideos    || '0';
+
+    } catch (err) {
+      console.error('Init error:', err);
+      showError(err.message || 'Something went wrong. Please try again.');
+    }
+  }
+
+  // ─────────────────────────────────────────
+  //  INTERSECTION OBSERVER (scroll reveal)
+  // ─────────────────────────────────────────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ─────────────────────────────────────────
+  //  LIGHTBOX
+  // ─────────────────────────────────────────
+  function openLightbox(src, caption) {
+    document.getElementById('lightbox-img').src     = src;
+    document.getElementById('lightbox-caption').textContent = caption || '';
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lightbox-img').src = '';
+    document.body.style.overflow = '';
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // ─────────────────────────────────────────
+  //  HAMBURGER MENU
+  // ─────────────────────────────────────────
   const hamburger = document.getElementById('hamburger');
   const navLinks  = document.getElementById('navLinks');
   hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
@@ -937,54 +921,9 @@
     a.addEventListener('click', () => navLinks.classList.remove('open'))
   );
 
-  // ── Scroll Reveal (Intersection Observer — very lightweight) ──
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer  = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  revealEls.forEach(el => observer.observe(el));
-
-  // ── Lightbox ──
-  function openLightbox(card, caption) {
-    const img = card.querySelector('img');
-    const lb  = document.getElementById('lightbox');
-    const lbi = document.getElementById('lightbox-img');
-    const lbc = document.getElementById('lightbox-caption');
-    if (img) {
-      lbi.src = img.src;
-      lbi.style.display = 'block';
-    } else {
-      lbi.style.display = 'none';
-    }
-    lbc.textContent = caption || '';
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  document.getElementById('lightbox').addEventListener('click', function(e) {
-    if (e.target === this) closeLightbox();
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeLightbox();
-  });
-
-  // ── Contribute Form ──
-  function handleSubmit() {
-    alert('🙏 Thank you! Your contribution has been noted.\nWe will add it to the shrine with love.');
-  }
+  // ── KICK OFF ──
+  init();
 
 </script>
-
 </body>
 </html>
