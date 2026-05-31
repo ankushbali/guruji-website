@@ -54,14 +54,20 @@ function parseVideoUrl(url, title = '') {
     badge: '▶️ YouTube'
   };
 
-  const fbMatch = url.match(/facebook\.com\/(watch\/?\\?v=(\d+)|video\/(\d+)|.*\/videos\/(\d+))/);
-  const fbId = fbMatch && (fbMatch[2] || fbMatch[3] || fbMatch[4]);
+  // ── Facebook ──
+  const fbMatch = url.match(
+    /facebook\.com\/(watch\/?\?v=(\d+)|video\/(\d+)|.*\/videos\/(\d+)|reel\/(\d+))/
+  );
+  const fbId = fbMatch && (fbMatch[2] || fbMatch[3] || fbMatch[4] || fbMatch[5]);
   if (fbId) return {
-    type: 'facebook',
-    embedUrl: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=560`,
-    title: title || 'Guruji — Facebook Video',
-    badge: '📘 Facebook'
+    type     : 'facebook',
+    embedUrl : null,
+    sourceUrl: url,
+    title    : title || 'Guruji — Facebook Video',
+    badge    : '📘 Facebook Reel'
   };
+
+
 
   const igMatch = url.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/);
   if (igMatch) return {
@@ -109,10 +115,26 @@ function buildVideos(driveVideos, videoSections) {
     grid.className = 'video-grid-inner';
     container.appendChild(grid);
 
-    videos.forEach((vid, i) => {
-      const card = document.createElement('div');
-      card.className = 'card video-card reveal';
-      card.style.transitionDelay = `${i * 40}ms`;
+videos.forEach((vid, i) => {
+  const card = document.createElement('div');
+  card.className = 'card video-card reveal';
+  card.style.transitionDelay = `${i * 40}ms`;
+
+  // Facebook — use click-to-open card
+    if (vid.type === 'facebook') {
+      card.innerHTML = `
+        <a href="${vid.sourceUrl}"
+           target="_blank" rel="noopener"
+           class="drive-video-thumb">
+          <div class="drive-play-icon">▶</div>
+          <div class="drive-video-label">📘 Open on Facebook</div>
+        </a>
+        <div class="video-info">
+          <div class="video-title">${vid.title}</div>
+          <div class="video-meta">${vid.badge}</div>
+        </div>`;
+    } else {
+      // YouTube / Instagram — use iframe
       card.innerHTML = `
         <iframe class="video-embed" src="${vid.embedUrl}" title="${vid.title}"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -121,9 +143,11 @@ function buildVideos(driveVideos, videoSections) {
           <div class="video-title">${vid.title}</div>
           <div class="video-meta">${vid.badge}</div>
         </div>`;
-      grid.appendChild(card);
-      requestAnimationFrame(() => revealObserver.observe(card));
-    });
+    }
+  
+    grid.appendChild(card);
+    requestAnimationFrame(() => revealObserver.observe(card));
+  });
   });
 
   if (hasDrive) {
