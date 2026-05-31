@@ -1,9 +1,14 @@
 // ─────────────────────────────────────
 //  VIDEO LINKS PARSER
+//  Supports: YouTube, Facebook, Instagram
+//  Supports: Dynamic [Section] headers
 // ─────────────────────────────────────
 async function fetchVideoLinks(rootItems) {
   const txtFile = rootItems.find(f => f.name === YOUTUBE_FILE_NAME);
-  if (!txtFile) { console.warn('⚠️ youtube-links.txt not found'); return {}; }
+  if (!txtFile) {
+    console.warn('⚠️ youtube-links.txt not found in root folder.');
+    return {};
+  }
 
   const url = `https://www.googleapis.com/drive/v3/files/${txtFile.id}?alt=media&key=${API_KEY}`;
   let text = '';
@@ -11,74 +16,96 @@ async function fetchVideoLinks(rootItems) {
     const res = await fetch(url);
     if (!res.ok) { console.warn('❌ Could not read youtube-links.txt'); return {}; }
     text = await res.text();
-  } catch (e) { console.warn('❌ Fetch failed:', e); return {}; }
+  } catch (e) {
+    console.warn('❌ Fetch failed:', e);
+    return {};
+  }
 
   const sections = {};
   let currentSection = null;
-  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
-    .split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+  const lines = text
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#'));
 
   for (const line of lines) {
     const cleanLine = line.replace(/[^\x20-\x7E]/g, '').trim();
+
+    // Detect [Section Name]
     const sectionMatch = cleanLine.match(/^\[(.+?)\]/);
     if (sectionMatch) {
       currentSection = sectionMatch[1].trim();
       sections[currentSection] = [];
+      console.log('📂 Section found:', currentSection);
       continue;
     }
     if (!currentSection) continue;
+
     let title = '', rawUrl = cleanLine;
     if (cleanLine.includes('|')) {
       const parts = cleanLine.split('|');
       title  = parts[0].trim();
       rawUrl = parts[1].trim();
     }
+
+    console.log('🎬 Parsing:', title, '→', rawUrl);
     const videoObj = parseVideoUrl(rawUrl, title);
     if (videoObj) sections[currentSection].push(videoObj);
     else console.warn('⚠️ Could not parse URL:', rawUrl);
   }
+
+  console.log('📄 Total lines parsed:', lines.length, lines);
   return sections;
 }
 
+
 // ─────────────────────────────────────
 //  UNIVERSAL URL PARSER
+//  YouTube / Facebook (all types) / Instagram
 // ─────────────────────────────────────
 function parseVideoUrl(url, title = '') {
+
+  // ── YouTube ──
   const ytMatch = url.match(
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
   );
   if (ytMatch) return {
-    type: 'youtube',
-    embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?rel=0`,
-    title: title || 'Guruji — YouTube Video',
-    badge: '▶️ YouTube'
+    type     : 'youtube',
+    embedUrl : `https://www.youtube.com/embed/${ytMatch[1]}?rel=0`,
+    sourceUrl: url,
+    title    : title || 'Guruji — YouTube Video',
+    badge    : '▶️ YouTube'
   };
 
-  // ── Facebook ──
+  // ── Facebook (watch, video, videos, reel, share/reels) ──
   const fbMatch = url.match(
-    /facebook\.com\/(watch\/?\?v=(\d+)|video\/(\d+)|.*\/videos\/(\d+)|reel\/(\d+))/
+    /facebook\.com(?:\/[^/]+)?\/(?:watch\/?\?v=(\d+)|video\/(\d+)|videos\/(\d+)|reel\/(\d+)|share\/(?:v\/)?(\d+)|reels\/(\d+))/i
   );
-  const fbId = fbMatch && (fbMatch[2] || fbMatch[3] || fbMatch[4] || fbMatch[5]);
-  if (fbId) return {
+  const fbId = fbMatch &&
+    (fbMatch[1] || fbMatch[2] || fbMatch[3] || fbMatch[4] || fbMatch[5] || fbMatch[6]);
+  if (fbId || url.includes('facebook.com')) return {
     type     : 'facebook',
     embedUrl : null,
     sourceUrl: url,
     title    : title || 'Guruji — Facebook Video',
-    badge    : '📘 Facebook Reel'
+    badge    : '📘 Facebook'
   };
 
-
-
+  // ── Instagram ──
   const igMatch = url.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/);
   if (igMatch) return {
-    type: 'instagram',
-    embedUrl: `https://www.instagram.com/${igMatch[1]}/${igMatch[2]}/embed/`,
-    title: title || 'Guruji — Instagram Video',
-    badge: '📸 Instagram'
+    type     : 'instagram',
+    embedUrl : `https://www.instagram.com/${igMatch[1]}/${igMatch[2]}/embed/`,
+    sourceUrl: url,
+    title    : title || 'Guruji — Instagram Video',
+    badge    : '📸 Instagram'
   };
 
   return null;
 }
+
 
 // ─────────────────────────────────────
 //  BUILD: VIDEOS
@@ -95,14 +122,18 @@ function buildVideos(driveVideos, videoSections) {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🎬</div>
-        <p>No videos yet — add links to <strong>youtube-links.txt</strong> or MP4s to <strong>Videos/</strong>!</p>
+        <p>No videos yet — add links to <strong>youtube-links.txt</strong>
+           or MP4s to <strong>Videos/</strong>!</p>
       </div>`;
     return;
   }
 
+  // ── Render each [Section] from youtube-links.txt ──
   sectionNames.forEach(sectionName => {
     const videos = videoSections[sectionName];
     if (!videos || !videos.length) return;
+
+    // Section header
     const header = document.createElement('div');
     header.className = 'video-section-header reveal';
     header.innerHTML = `
@@ -111,45 +142,51 @@ function buildVideos(driveVideos, videoSections) {
     container.appendChild(header);
     requestAnimationFrame(() => revealObserver.observe(header));
 
+    // Section grid
     const grid = document.createElement('div');
     grid.className = 'video-grid-inner';
     container.appendChild(grid);
 
-videos.forEach((vid, i) => {
-  const card = document.createElement('div');
-  card.className = 'card video-card reveal';
-  card.style.transitionDelay = `${i * 40}ms`;
+    videos.forEach((vid, i) => {
+      const card = document.createElement('div');
+      card.className = 'card video-card reveal';
+      card.style.transitionDelay = `${i * 40}ms`;
 
-  // Facebook — use click-to-open card
-    if (vid.type === 'facebook') {
-      card.innerHTML = `
-        <a href="${vid.sourceUrl}"
-           target="_blank" rel="noopener"
-           class="drive-video-thumb">
-          <div class="drive-play-icon">▶</div>
-          <div class="drive-video-label">📘 Open on Facebook</div>
-        </a>
-        <div class="video-info">
-          <div class="video-title">${vid.title}</div>
-          <div class="video-meta">${vid.badge}</div>
-        </div>`;
-    } else {
-      // YouTube / Instagram — use iframe
-      card.innerHTML = `
-        <iframe class="video-embed" src="${vid.embedUrl}" title="${vid.title}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen loading="lazy"></iframe>
-        <div class="video-info">
-          <div class="video-title">${vid.title}</div>
-          <div class="video-meta">${vid.badge}</div>
-        </div>`;
-    }
-  
-    grid.appendChild(card);
-    requestAnimationFrame(() => revealObserver.observe(card));
-  });
+      if (vid.type === 'facebook') {
+        // ── Facebook → click-to-open (embedding blocked by FB) ──
+        card.innerHTML = `
+          <a href="${vid.sourceUrl}"
+             target="_blank" rel="noopener"
+             class="drive-video-thumb">
+            <div class="drive-play-icon">▶</div>
+            <div class="drive-video-label">📘 Open on Facebook</div>
+          </a>
+          <div class="video-info">
+            <div class="video-title">${vid.title}</div>
+            <div class="video-meta">${vid.badge}</div>
+          </div>`;
+      } else {
+        // ── YouTube / Instagram → iframe embed ──
+        card.innerHTML = `
+          <iframe class="video-embed"
+            src="${vid.embedUrl}"
+            title="${vid.title}"
+            allow="accelerometer; autoplay; clipboard-write;
+                   encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen loading="lazy">
+          </iframe>
+          <div class="video-info">
+            <div class="video-title">${vid.title}</div>
+            <div class="video-meta">${vid.badge}</div>
+          </div>`;
+      }
+
+      grid.appendChild(card);
+      requestAnimationFrame(() => revealObserver.observe(card));
+    });
   });
 
+  // ── Drive MP4s → "Other Videos" section ──
   if (hasDrive) {
     const header = document.createElement('div');
     header.className = 'video-section-header reveal';
@@ -171,7 +208,8 @@ videos.forEach((vid, i) => {
       card.style.transitionDelay = `${i * 40}ms`;
       card.innerHTML = `
         <a href="https://drive.google.com/file/d/${file.id}/view"
-           target="_blank" rel="noopener" class="drive-video-thumb">
+           target="_blank" rel="noopener"
+           class="drive-video-thumb">
           <div class="drive-play-icon">▶</div>
           <div class="drive-video-label">🎬 Click to Watch</div>
         </a>
