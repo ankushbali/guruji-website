@@ -593,7 +593,11 @@
   const API_KEY     = 'AIzaSyDegKB0By3JhcppdsM1Ur8YJ644HVArImA';                 // ← Your API key here
   const ROOT_FOLDER = '1ZwZNt8Aa_XqnJw1_U8_ST0afcD59fBcY';  // ← Already set!
 
-  const FOLDER_NAMES      = { photos: 'Photos', audio: 'Audio', videos: 'Videos' };
+  const FOLDER_NAMES = {
+    photos : 'Photos',   // ← e.g. if your folder is literally called "Photos"
+    audio  : 'Audio',    // ← e.g. "Audio Files" → put 'Audio Files'
+    videos : 'Videos'    // ← exact name matters!
+};
   const YOUTUBE_FILE_NAME = 'youtube-links.txt';
 
   // ─────────────────────────────────────
@@ -646,17 +650,21 @@
   }
 
   async function findSubfolder(parentId, name) {
+    // ✅ Escape single quotes in name for Drive API query safety
+    const safeName = name.replace(/'/g, "\\'");
+
     const url = new URL('https://www.googleapis.com/drive/v3/files');
     url.searchParams.set('q',
-      `'${parentId}' in parents and name = '${name}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
+      `'${parentId}' in parents and name = '${safeName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
     );
     url.searchParams.set('key',    API_KEY);
     url.searchParams.set('fields', 'files(id, name)');
+
     const res  = await fetch(url.toString());
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     return data.files?.[0] || null;
-  }
+}
 
   // ─────────────────────────────────────
   //  YOUTUBE LINKS PARSER
@@ -785,7 +793,7 @@
 
     audios.forEach((file, i) => {
       // ✅ Using export=download for audio streaming
-      const src  = audioUrl(file.id);
+      const src = `https://drive.google.com/file/d/${file.id}/preview`;
       const name = cleanName(file.name);
       const date = formatDate(file.createdTime);
       const icon = icons[i % icons.length];
@@ -797,23 +805,24 @@
       card.style.transitionDelay = `${i * 40}ms`;
       card.innerHTML = `
         <div class="audio-info">
-          <div class="audio-icon">${icon}</div>
-          <div>
+            <div class="audio-icon">${icon}</div>
+            <div>
             <div class="audio-title">${name}</div>
             <div class="audio-sub">${date || 'Satsang'}</div>
-          </div>
+            </div>
         </div>
-        <audio controls preload="none"
-               onplay="handleAudioPlay(this)"
-               onerror="this.nextElementSibling.style.display='flex'">
-          <source src="${src}" type="audio/mpeg"/>
-          <source src="${src}" type="audio/ogg"/>
-          Your browser does not support audio.
-        </audio>
-        <a href="${driveLink}" target="_blank" class="audio-fallback" style="display:none;">
-          ▶️ Open in Google Drive
-        </a>
-      `;
+
+        <!-- ✅ Drive preview iframe — works perfectly for audio -->
+        <iframe
+            src="${src}"
+            width="100%"
+            height="80"
+            allow="autoplay"
+            style="border:none; border-radius:12px; margin-top:4px;"
+            loading="lazy">
+        </iframe>
+        `;
+
       grid.appendChild(card);
       requestAnimationFrame(() => revealObserver.observe(card));
     });
