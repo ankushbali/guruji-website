@@ -578,8 +578,9 @@
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
   function driveVideoUrl(fileId) {
-    return `https://drive.google.com/file/d/${fileId}/preview`;
+  return `https://drive.google.com/file/d/${fileId}/preview?usp=sharing`;
   }
+
   function youtubeEmbedUrl(videoId) {
     return `https://www.youtube.com/embed/${videoId}?rel=0`;
   }
@@ -808,55 +809,97 @@ function parseVideoUrl(url, title = '') {
   // ─────────────────────────────────────
   //  BUILD: VIDEOS
   // ─────────────────────────────────────
-  function buildVideos(driveVideos, youtubeVideos) {
-    const grid = document.getElementById('videoGrid');
-    grid.innerHTML = '';
-    const total = driveVideos.length + youtubeVideos.length;
-    if (!total) {
-      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🎬</div>
-        <p>No videos yet — add links to <strong>youtube-links.txt</strong> or MP4s to <strong>Videos/</strong>!</p></div>`;
+    function buildVideos(driveVideos, videoSections) {
+    const container = document.getElementById('videoGrid');
+    container.innerHTML = '';
+  
+    const sectionNames = Object.keys(videoSections);
+    const hasDrive     = driveVideos.length > 0;
+    const hasSections  = sectionNames.length > 0;
+  
+    if (!hasDrive && !hasSections) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🎬</div>
+          <p>No videos yet — add links to <strong>youtube-links.txt</strong> or MP4s to <strong>Videos/</strong>!</p>
+        </div>`;
       return;
     }
-    // YouTube first
-    youtubeVideos.forEach((vid, i) => {
-      const card = document.createElement('div');
-      card.className = 'card video-card reveal';
-      card.style.transitionDelay = `${i * 40}ms`;
-      card.innerHTML = `
-        <iframe class="video-embed"
-          src="${youtubeEmbedUrl(vid.id)}"
-          title="${vid.title}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen loading="lazy">
-        </iframe>
-        <div class="video-info">
-          <div class="video-title">${vid.title}</div>
-          <div class="video-meta">▶️ YouTube</div>
-        </div>`;
-      grid.appendChild(card);
-      requestAnimationFrame(() => revealObserver.observe(card));
+  
+    // ── Render each [Section] ──
+    sectionNames.forEach(sectionName => {
+      const videos = videoSections[sectionName];
+      if (!videos || !videos.length) return;
+  
+      const header = document.createElement('div');
+      header.className = 'video-section-header reveal';
+      header.innerHTML = `
+        <h3 class="video-section-title">🎬 ${sectionName}</h3>
+        <div class="video-section-divider"></div>`;
+      container.appendChild(header);
+      requestAnimationFrame(() => revealObserver.observe(header));
+  
+      const grid = document.createElement('div');
+      grid.className = 'video-grid-inner';
+      container.appendChild(grid);
+  
+      videos.forEach((vid, i) => {
+        const card = document.createElement('div');
+        card.className = 'card video-card reveal';
+        card.style.transitionDelay = `${i * 40}ms`;
+        card.innerHTML = `
+          <iframe class="video-embed"
+            src="${vid.embedUrl}"
+            title="${vid.title}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen loading="lazy">
+          </iframe>
+          <div class="video-info">
+            <div class="video-title">${vid.title}</div>
+            <div class="video-meta">${vid.badge}</div>
+          </div>`;
+        grid.appendChild(card);
+        requestAnimationFrame(() => revealObserver.observe(card));
+      });
     });
-    // Drive MP4s
-    driveVideos.forEach((file, i) => {
-      const name = cleanName(file.name);
-      const date = formatDate(file.createdTime);
-      const card = document.createElement('div');
-      card.className = 'card video-card reveal';
-      card.style.transitionDelay = `${(youtubeVideos.length + i) * 40}ms`;
-      card.innerHTML = `
-        <iframe class="video-embed"
-          src="${driveVideoUrl(file.id)}"
-          title="${name}"
-          allowfullscreen loading="lazy">
-        </iframe>
-        <div class="video-info">
-          <div class="video-title">${name}</div>
-          <div class="video-meta">🎬 Video${date ? ' · ' + date : ''}</div>
-        </div>`;
-      grid.appendChild(card);
-      requestAnimationFrame(() => revealObserver.observe(card));
-    });
+  
+    // ── Drive MP4s under "Other Videos" ──
+    if (hasDrive) {
+      const header = document.createElement('div');
+      header.className = 'video-section-header reveal';
+      header.innerHTML = `
+        <h3 class="video-section-title">🎬 Other Videos</h3>
+        <div class="video-section-divider"></div>`;
+      container.appendChild(header);
+      requestAnimationFrame(() => revealObserver.observe(header));
+  
+      const grid = document.createElement('div');
+      grid.className = 'video-grid-inner';
+      container.appendChild(grid);
+  
+      driveVideos.forEach((file, i) => {
+        const name = cleanName(file.name);
+        const date = formatDate(file.createdTime);
+        const card = document.createElement('div');
+        card.className = 'card video-card reveal';
+        card.style.transitionDelay = `${i * 40}ms`;
+        card.innerHTML = `
+          <a href="https://drive.google.com/file/d/${file.id}/view"
+             target="_blank" rel="noopener"
+             class="drive-video-thumb">
+            <div class="drive-play-icon">▶</div>
+            <div class="drive-video-label">🎬 Click to Watch</div>
+          </a>
+          <div class="video-info">
+            <div class="video-title">${name}</div>
+            <div class="video-meta">🎬 Video${date ? ' · ' + date : ''}</div>
+          </div>`;
+        grid.appendChild(card);
+        requestAnimationFrame(() => revealObserver.observe(card));
+      });
+    }
   }
+
 
   // ─────────────────────────────────────
   //  ERROR STATE
